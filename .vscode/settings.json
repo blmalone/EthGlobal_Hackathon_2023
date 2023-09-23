@@ -5,5 +5,8 @@
   "solidity.formatter": "prettier",
   "[solidity]": {
     "editor.defaultFormatter": "JuanBlanco.solidity"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }

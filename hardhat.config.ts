@@ -49,7 +49,7 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://bsc-dataseed1.binance.org";
       break;
     case "polygon-mumbai":
-      jsonRpcUrl = "https://rpc-mumbai.matic.today"; // OR https://endpoints.omniatech.io/v1/matic/mumbai/public
+      jsonRpcUrl = "https://endpoints.omniatech.io/v1/matic/mumbai/public";
       break;
     case "polygon-zkevm-testnet":
       jsonRpcUrl = "https://rpc.public.zkevm-test.net";
@@ -58,9 +58,10 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://base-goerli.public.blastapi.io"; // https://chainlist.org/chain/84531
       break;
     default:
+      console.log(chain);
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
   }
-  return {
+  let x = {
     accounts: {
       count: 10,
       mnemonic,
@@ -69,6 +70,7 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
     chainId: chainIds[chain],
     url: jsonRpcUrl,
   };
+  return x;
 }
 
 const config: HardhatUserConfig = {
