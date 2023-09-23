@@ -7,7 +7,6 @@ import { resolve } from "path";
 
 import "./tasks/accounts";
 import "./tasks/greet";
-import "./tasks/taskDeploy";
 
 const dotenvConfigPath: string = process.env.DOTENV_CONFIG_PATH || "./.env";
 dotenvConfig({ path: resolve(__dirname, dotenvConfigPath) });
@@ -58,7 +57,6 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://base-goerli.public.blastapi.io"; // https://chainlist.org/chain/84531
       break;
     default:
-      console.log(chain);
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
   }
   let x = {
