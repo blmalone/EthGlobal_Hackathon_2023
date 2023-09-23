@@ -52,10 +52,10 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://rpc-mumbai.matic.today"; // OR https://endpoints.omniatech.io/v1/matic/mumbai/public
       break;
     case "polygon-zkevm-testnet":
-      jsonRpcUrl = "https://rpc.public.zkevm-test.net"
+      jsonRpcUrl = "https://rpc.public.zkevm-test.net";
       break;
     case "base-goerli-testnet":
-      jsonRpcUrl = "https://base-goerli.public.blastapi.io" // https://chainlist.org/chain/84531
+      jsonRpcUrl = "https://base-goerli.public.blastapi.io"; // https://chainlist.org/chain/84531
       break;
     default:
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
