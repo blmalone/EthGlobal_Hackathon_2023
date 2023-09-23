@@ -1,7 +1,7 @@
 name: "CI"
 
 env:
-  DOTENV_CONFIG_PATH: "./.env.example"
+  DOTENV_CONFIG_PATH: "./.env"
 
 on:
   workflow_dispatch:
