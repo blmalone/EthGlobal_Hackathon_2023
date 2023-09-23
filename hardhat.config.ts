@@ -59,7 +59,7 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
     default:
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
   }
-  let x = {
+  return {
     accounts: {
       count: 10,
       mnemonic,
@@ -68,7 +68,6 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
     chainId: chainIds[chain],
     url: jsonRpcUrl,
   };
-  return x;
 }
 
 const config: HardhatUserConfig = {
