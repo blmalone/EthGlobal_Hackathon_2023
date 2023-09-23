@@ -56,6 +56,7 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       break;
     case "base-goerli-testnet":
       jsonRpcUrl = "https://base-goerli.public.blastapi.io" // https://chainlist.org/chain/84531
+      break;
     default:
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
   }
