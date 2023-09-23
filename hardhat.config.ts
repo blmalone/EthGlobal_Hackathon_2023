@@ -31,6 +31,7 @@ const chainIds = {
   hardhat: 31337,
   mainnet: 1,
   "optimism-mainnet": 10,
+  "optimism-goerli": 420,
   "polygon-mainnet": 137,
   "polygon-mumbai": 80001,
   "polygon-zkevm-testnet": 1442,
@@ -46,6 +47,9 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       break;
     case "bsc":
       jsonRpcUrl = "https://bsc-dataseed1.binance.org";
+      break;
+    case "optimism-goerli":
+      jsonRpcUrl = "https://goerli.optimism.io";
       break;
     case "polygon-mumbai":
       jsonRpcUrl = "https://endpoints.omniatech.io/v1/matic/mumbai/public";
@@ -112,6 +116,7 @@ const config: HardhatUserConfig = {
     bsc: getChainConfig("bsc"),
     mainnet: getChainConfig("mainnet"),
     optimism: getChainConfig("optimism-mainnet"),
+    "optimism-goerli": getChainConfig("optimism-goerli"),
     "polygon-mainnet": getChainConfig("polygon-mainnet"),
     "polygon-mumbai": getChainConfig("polygon-mumbai"),
     sepolia: getChainConfig("sepolia"),
