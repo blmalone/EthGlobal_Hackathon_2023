@@ -90,7 +90,7 @@ const config: HardhatUserConfig = {
   },
   gasReporter: {
     currency: "USD",
-    enabled: process.env.REPORT_GAS ? true : false,
+    enabled: true,
     excludeContracts: [],
     src: "./contracts",
   },
@@ -116,6 +116,11 @@ const config: HardhatUserConfig = {
     "polygon-mainnet": getChainConfig("polygon-mainnet"),
     "polygon-mumbai": getChainConfig("polygon-mumbai"),
     sepolia: getChainConfig("sepolia"),
+    goerli: {
+      accounts: [""],
+      chainId: chainIds["base-goerli-testnet"],
+      url: "https://base-goerli.public.blastapi.io",
+    },
   },
   paths: {
     artifacts: "./artifacts",

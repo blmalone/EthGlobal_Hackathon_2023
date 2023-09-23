@@ -65,6 +65,7 @@
     "deploy:contracts": "hardhat deploy",
     "deploy:contracts:polygon:mumbai": "hardhat deploy --network polygon-mumbai",
     "deploy:contracts:ganache": "hardhat deploy --network ganache",
+    "deploy:contracts:goerli": "hardhat deploy --network goerli",
     "lint": "pnpm lint:sol && pnpm lint:ts && pnpm prettier:check",
     "lint:sol": "solhint --max-warnings 0 \"contracts/**/*.sol\"",
     "lint:ts": "eslint --ignore-path ./.eslintignore --ext .js,.ts .",
