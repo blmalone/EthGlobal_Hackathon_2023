@@ -43,13 +43,12 @@ contract NftGatedPaymaster is BasePaymaster {
         }
         console.log("owns nft: ", ownsNFT);
         if(!ownsNFT) {
-            // Don't pay.
             console.log("we will pay.");
         } else {
-            // Pay.
             console.log("we won't pay.");
         }
-        return ("", maxCost == 12345 ? 1 : 0);
+        require(ownsNFT, "Smart Account does not qualify.");
+        return ("", 1);
     }
 
     function hasBalanceForNFTCollection(address _contractAddress, address _owner) internal view returns (bool) {

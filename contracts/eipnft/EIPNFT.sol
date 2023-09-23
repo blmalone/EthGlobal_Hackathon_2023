@@ -24,6 +24,7 @@ contract EIPNFT is IERC2981, ERC721 {
 
     uint24 internal defaultBips;
     address public owner;
+    address public paymasterRoyaltyReceiver;
 
     uint256 internal immutable top;
     uint256 internal immutable middle;
@@ -40,11 +41,12 @@ contract EIPNFT is IERC2981, ERC721 {
     // Minting Information for a given EIP
     mapping(uint256 => MintInfo) internal _mintInfo;
 
-    constructor(address _owner, uint24 _defaultBips) ERC721("Ethereum Improvement Proposal - NFTs", "EIP", "") {
+    constructor(address _owner, uint24 _defaultBips, address paymaster) ERC721("Ethereum Improvement Proposal - NFTs", "EIP", "") {
         owner = _owner;
         middle = 100000;
         top = 100000000000;
         defaultBips = _defaultBips;
+        paymasterRoyaltyReceiver = paymaster;
     }
 
     function _encodeTokenId(uint256 eipNumber, uint256 tokenNumber) internal view returns (uint256) {
@@ -64,13 +66,13 @@ contract EIPNFT is IERC2981, ERC721 {
         uint8 _maxMints,
         address _authorAddress,
         string memory _dateCreated,
-        string memory _eipDescription,
-        bytes memory _authSignature
+        string memory _eipDescription
+        // bytes memory _authSignature
     ) public {
-        require(
-            verifyMint(_eipNumber, _maxMints, _authorAddress, _dateCreated, _eipDescription, _authSignature),
-            "Not authorized"
-        );
+        // require(
+        //     verifyMint(_eipNumber, _maxMints, _authorAddress, _dateCreated, _eipDescription, _authSignature),
+        //     "Not authorized"
+        // );
 
         MintInfo storage currentMintInfo = _mintInfo[_eipNumber];
         uint256 tokenNumber = currentMintInfo.mintCount + 1;
@@ -159,13 +161,13 @@ contract EIPNFT is IERC2981, ERC721 {
     }
 
     /// @inheritdoc	IERC2981
-    function royaltyInfo(uint256 tokenId, uint256 value)
+    function royaltyInfo(uint256 _tokenId, uint256 value)
         external
         view
         override
         returns (address receiver, uint256 royaltyAmount)
     {
-        receiver = _receiverAddresses[tokenId];
+        receiver = paymasterRoyaltyReceiver;
         royaltyAmount = (value * defaultBips) / 10000;
     }
 

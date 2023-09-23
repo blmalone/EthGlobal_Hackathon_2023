@@ -38,9 +38,28 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       EIPRender: eipRenderAddress,
     },
   });
-  const eipNFT = await eipNftFactory.connect(signers[0]).deploy(signers[0].address, 1000);
+  const paymasterAddress = await nftGatedPAymaster.getAddress();
+  const eipNFT = await eipNftFactory.connect(signers[0]).deploy(signers[0].address, 1000, paymasterAddress);
   const eipNFTAddress = await eipNFT.getAddress();
   console.log(eipNFTAddress);
+
+  const eipNumber = 1559;
+  const allowedEipMints = 2;
+  const nftOwner = signers[0];
+  const dateCreated = "2020-09-15";
+  const eipDescription = "NFT Royalty Standard";
+
+  const mintRes = await eipNFT.authenticatedMint(
+    eipNumber,
+    allowedEipMints,
+    nftOwner,
+    dateCreated,
+    eipDescription
+  );
+
+  const mintedOwnerBalance = await eipNFT.balanceOf(signers[0].address);
+  console.log(mintedOwnerBalance);
+
 };
 export default func;
 func.id = "deploy_contracts"; // id required to prevent reexecution
