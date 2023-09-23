@@ -26,6 +26,7 @@ if (!infuraApiKey) {
 const chainIds = {
   "arbitrum-mainnet": 42161,
   avalanche: 43114,
+  "base-goerli-testnet": 84531,
   bsc: 56,
   ganache: 1337,
   hardhat: 31337,
@@ -33,9 +34,11 @@ const chainIds = {
   "optimism-mainnet": 10,
   "polygon-mainnet": 137,
   "polygon-mumbai": 80001,
+  "polygon-zkevm-testnet": 1442,
   sepolia: 11155111,
 };
 
+// Look on https://chainlist.org/
 function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
   let jsonRpcUrl: string;
   switch (chain) {
@@ -45,6 +48,14 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
     case "bsc":
       jsonRpcUrl = "https://bsc-dataseed1.binance.org";
       break;
+    case "polygon-mumbai":
+      jsonRpcUrl = "https://rpc-mumbai.matic.today"; // OR https://endpoints.omniatech.io/v1/matic/mumbai/public
+      break;
+    case "polygon-zkevm-testnet":
+      jsonRpcUrl = "https://rpc.public.zkevm-test.net"
+      break;
+    case "base-goerli-testnet":
+      jsonRpcUrl = "https://base-goerli.public.blastapi.io" // https://chainlist.org/chain/84531
     default:
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
   }
