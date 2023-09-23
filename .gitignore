@@ -12,7 +12,6 @@ types
 deployments
 
 # files
-*.env
 *.log
 .DS_Store
 .pnp.*
