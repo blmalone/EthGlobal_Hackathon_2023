@@ -22,9 +22,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <WagmiConfig config={wagmiConfig}>
-          <Homepage />
+          <Login />
         </WagmiConfig>
-        <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
       </header>
     </div>
   );
