@@ -21,10 +21,10 @@ contract NftGatedPaymaster is BasePaymaster {
     }
 
     function addNFTCollection(address _newAddress) public onlyOwner {
-        require(
-            IERC721(_newAddress).supportsInterface(0x80ac58cd), // IERC721 interface ID
-            "The contract does not implement the IERC721 interface"
-        );
+        // require(
+        //     IERC721(_newAddress).supportsInterface(0x80ac58cd), // IERC721 interface ID
+        //     "The contract does not implement the IERC721 interface"
+        // );
         erc721Contracts.push(_newAddress);
     }
 
