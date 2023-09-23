@@ -5,9 +5,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  const greeter = await deploy("Greeter", {
+  const greeter = await deploy("PaymasterNft", {
     from: deployer,
-    args: ["Bonjour, le monde!"],
+    args: [],
     log: true,
   });
 

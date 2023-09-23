@@ -103,10 +103,10 @@ const config: HardhatUserConfig = {
     },
     ganache: {
       accounts: {
-        mnemonic,
+        mnemonic: "marble alien armed gate borrow tissue observe return cloth awesome post napkin",
       },
       chainId: chainIds.ganache,
-      url: "http://localhost:8545",
+      url: "http://localhost:7545",
     },
     arbitrum: getChainConfig("arbitrum-mainnet"),
     avalanche: getChainConfig("avalanche"),
