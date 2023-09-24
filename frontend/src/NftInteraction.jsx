@@ -15,15 +15,17 @@ export function NftInteraction() {
   const defaultStyle = {
     margin: "5px",
     border: "5px solid white",
-    width: "300px",
-    height: "300px"
+    width: "350px",
+    height: "350px",
+    flex: "0 0 calc(33.33% - 20px)"
   };
 
   const selectedStyle = {
     margin: "5px",
     border: "5px solid red",
-    width: "300px",
-    height: "300px"
+    width: "350px",
+    height: "350px",
+    flex: "0 0 calc(33.33% - 20px)"
   };
 
   const { address, isConnected } = useAccount();
@@ -34,23 +36,28 @@ export function NftInteraction() {
   const images = [
     {
       url: 'https://ipfs.io/ipfs/QmQ6VgRFiVTdKbiebxGvhW3Wa3Lkhpe6SkWBPjGnPkTttS/7913.png',
-      id: 1
+      id: 1,
+      eip: "EIP-2"
     },
     {
       url: '/assets/2.svg',
-      id: 2
+      id: 2,
+      eip: "EIP-20"
     },
     {
       url: '/assets/3.svg',
-      id: 3
+      id: 3,
+      eip: "EIP-196"
     },
     {
       url: '/assets/4.svg',
-      id: 4
+      id: 4,
+      eip: "EIP-214"
     },
     {
       url: '/assets/5.svg',
-      id: 5
+      id: 5,
+      eip: "EIP-4337"
     },
   ]
 
@@ -78,7 +85,7 @@ export function NftInteraction() {
   if (isConnected) {
     return (
       <div>
-        <div>Connected to address: {address}</div>
+        <div>Welcome, Vitalik Buterin!</div>
         <div>
           <br />
           {!beganMintingProcess && (
@@ -89,24 +96,28 @@ export function NftInteraction() {
           {beganMintingProcess && (
             <div>
               Thank you for your contribution to the public good that is the Ethereum Network.
-              <br />
+              <br /><br />
               You have contributed to 5 different EIPS.
+              <br /><br />
               You now have the opportunity to mint 1/5 of the below NFT's thanks to our partners at APECoin & Nouns Dao.
-              <br />
+              <br /><br />
               With these, anytime you spend from your connected wallet - you will have gas-less transaction fees.
-              <br />
+              <br /><br />
               {" "}
-              Select Image:
-              <div>
+              <div style={{ display: "flex", flexWrap: "wrap" }}>
                 {images.map((item) => {
                   return (
-                    <img
-                      onClick={() => setSelectedImageId(item.id)}
-                      style={selectedImageId === item.id ? selectedStyle : defaultStyle}
-                      alt="Nouns Dao"
-                      id={`image_${item.id}`}
-                      src={item.url}
-                    />
+                    <div>
+                      <img
+                        onClick={() => setSelectedImageId(item.id)}
+                        style={selectedImageId === item.id ? selectedStyle : defaultStyle}
+                        alt="Nouns Dao"
+                        id={`image_${item.id}`}
+                        src={item.url}
+                      />
+                      <div class="cented-eip">{item.eip}</div>
+                    </div>
+
                   );
                 })}
               </div>
