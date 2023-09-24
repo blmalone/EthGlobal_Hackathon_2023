@@ -1,6 +1,8 @@
 const express = require('express');
 require('dotenv').config();
 const axios = require('axios');
+import { fetchQuery } = require("@airstack/node");
+
 const app = express()
 
 
@@ -44,6 +46,38 @@ app.get('/nft', async (req, res) => {
     console.error(error.response.data);
     res.send(error.response.data).status(500);
   }
+});
+
+app.get('/airstack/query', async (req, res) => {
+  const address = req.query.address;
+  const query = `query MyQuery {
+    GoerliOptimism: TokenBalances(
+      input: {filter: {owner: {_eq: "{address}"}, tokenType: {_in: [ERC1155, ERC721]}}, blockchain: ethereum, limit: 50}
+    ) {
+      TokenBalance {
+        owner {
+          identity
+        }
+        amount
+        tokenAddress
+        tokenId
+        tokenType
+        tokenNfts {
+          contentValue {
+            image {
+              small
+            }
+          }
+        }
+      }
+      pageInfo {
+        nextCursor
+        prevCursor
+      }
+    }
+  }`;
+  const { data, error } = await fetchQuery(query, variables);
+  res.send(data);
 });
 
 app.listen(port, () => {
