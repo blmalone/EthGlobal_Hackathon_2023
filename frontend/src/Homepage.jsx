@@ -1,5 +1,6 @@
 import Login from "./Login";
 import React, { Component } from "react";
+import { fetchBlockNumber } from 'wagmi/actions'
 
 class Homepage extends Component {
   constructor() {

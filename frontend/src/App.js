@@ -10,6 +10,7 @@ const chains = [arbitrum, mainnet, polygon, goerli];
 const projectId = "aae549724982e724fe290ad620cfa847";
 
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
+
 const wagmiConfig = createConfig({
   autoConnect: true,
   connectors: w3mConnectors({ projectId, chains }),
@@ -22,8 +23,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <WagmiConfig config={wagmiConfig}>
-          <Login />
+          <Homepage />
         </WagmiConfig>
+
+        <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
       </header>
     </div>
   );
