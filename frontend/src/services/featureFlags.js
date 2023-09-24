@@ -4,6 +4,8 @@ const getNftContractAddress = () => {
     return process.env.REACT_APP_NFT_CONTRACT_ADDRESS_SEPOLIA;
   } else if (network === "goerli") {
     return process.env.REACT_APP_NFT_CONTRACT_ADDRESS_GOERLI;
+  } else if (network === "polygon") {
+    return process.env.REACT_APP_NFT_CONTRACT_ADDRESS_POLYGON;
   }
 }
 

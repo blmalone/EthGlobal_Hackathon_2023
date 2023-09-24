@@ -1,4 +1,4 @@
-import PaymasterNftAbi from "./frontend-contracts/PaymasterNft.json";
+import EIPNFT from "./frontend-contracts/EIPNFT.json";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
 import * as featureFlags from './services/featureFlags';
@@ -15,11 +15,15 @@ export function NftInteraction() {
   const defaultStyle = {
     margin: "5px",
     border: "5px solid white",
+    width: "300px",
+    height: "300px"
   };
 
   const selectedStyle = {
     margin: "5px",
     border: "5px solid red",
+    width: "300px",
+    height: "300px"
   };
 
   const { address, isConnected } = useAccount();
@@ -27,13 +31,34 @@ export function NftInteraction() {
   const { disconnect } = useDisconnect();
   const [beganMintingProcess, setBeganMintingProcess] = useState(false);
   const [selectedImageId, setSelectedImageId] = useState(0);
-  const images = [1, 2, 3, 4, 5];
+  const images = [
+    {
+      url: 'https://ipfs.io/ipfs/QmQ6VgRFiVTdKbiebxGvhW3Wa3Lkhpe6SkWBPjGnPkTttS/7913.png',
+      id: 1
+    },
+    {
+      url: '/assets/2.svg',
+      id: 2
+    },
+    {
+      url: '/assets/3.svg',
+      id: 3
+    },
+    {
+      url: '/assets/4.svg',
+      id: 4
+    },
+    {
+      url: '/assets/5.svg',
+      id: 5
+    },
+  ]
 
   const { config } = usePrepareContractWrite({
     address: featureFlags.getNftContractAddress(),
-    abi: PaymasterNftAbi.abi,
-    functionName: "awardItem",
-    args: [address, `${selectedImageId}`],
+    abi: EIPNFT.abi,
+    functionName: "authenticatedMint",
+    args: [address, selectedImageId],
   });
 
   const { data, write } = useContractWrite(config);
@@ -55,7 +80,7 @@ export function NftInteraction() {
       <div>
         <div>Connected to address: {address}</div>
         <div>
-          <br/>
+          <br />
           {!beganMintingProcess && (
             <div>
               <Button onClick={() => setBeganMintingProcess(true)} variant="contained" color="primary">Begin Minting Process</Button>
@@ -69,11 +94,11 @@ export function NftInteraction() {
                 {images.map((item) => {
                   return (
                     <img
-                      onClick={() => setSelectedImageId(item)}
-                      style={selectedImageId === item ? selectedStyle : defaultStyle}
+                      onClick={() => setSelectedImageId(item.id)}
+                      style={selectedImageId === item.id ? selectedStyle : defaultStyle}
                       alt="Nouns Dao"
-                      id={`image_${item}`}
-                      src={`./assets/${item}.svg`}
+                      id={`image_${item.id}`}
+                      src={item.url}
                     />
                   );
                 })}
@@ -92,7 +117,7 @@ export function NftInteraction() {
             </div>
           )}
         </div>
-        <br/>
+        <br />
         <Button onClick={disconnect} variant="contained" color="primary">Disconnect</Button>
       </div>
     );
