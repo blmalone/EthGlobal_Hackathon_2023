@@ -103,7 +103,7 @@ library EIPRender {
                 )
             );
     }
-
+    
     function generateImage(
         string memory name,
         string memory collectionInfo,
