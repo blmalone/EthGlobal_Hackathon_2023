@@ -3,9 +3,9 @@ import Homepage from "./Homepage.jsx";
 import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
 import { configureChains, createConfig, sepolia, WagmiConfig } from "wagmi";
-import { arbitrum, goerli, mainnet, polygon } from "wagmi/chains";
+import { arbitrum, goerli, mainnet, polygon, polygonMumbai } from "wagmi/chains";
 
-const chains = [arbitrum, mainnet, polygon, goerli, sepolia];
+const chains = [arbitrum, mainnet, polygon, goerli, sepolia, polygonMumbai];
 const projectId = "aae549724982e724fe290ad620cfa847";
 
 

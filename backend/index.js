@@ -59,6 +59,21 @@ app.get('/nft', async (req, res) => {
   }
 });
 
+app.get('/nft-alchemy', async (req, res) => {
+  const address = req.query.address;
+  const nftContract = req.query.contractAddress;
+  const options = { method: 'GET', headers: { accept: 'application/json' } };
+
+  const response = await axios.get(`https://polygon-mumbai.g.alchemy.com/nft/v3/F9oZzn4hiBlbbfAMtL9BCPIJ-R7yK8HG/getNFTsForOwner?owner=${address}&contractAddresses[]=${nftContract}&withMetadata=true&pageSize=100`);
+  const responseData = response.data;
+  if (responseData && responseData.ownedNfts && responseData.ownedNfts.length > 0) {
+    return res.send({
+      owned: true,
+    })
+  }
+  return res.send(responseData);
+});
+
 app.post('/bundler/estimateUserOpGas', async (req, res) => {
   console.log("body", req.body);
   const sender = req.body.sender;

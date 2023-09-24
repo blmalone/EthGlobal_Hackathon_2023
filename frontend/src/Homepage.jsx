@@ -2,7 +2,7 @@ import Login from "./Login";
 import NftInteraction from "./NftInteraction";
 import { useAuth0 } from "@auth0/auth0-react";
 import Button from "@mui/material/Button";
-import {React, useEffect, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { Web3Button } from "@web3modal/react";
 import { useAccount, } from 'wagmi'
 import ImageCard from "./ImageCard";
@@ -16,7 +16,7 @@ function Homepage() {
     console.log(`metamaskAuthenticated changed: ${metamaskAuthenticated}`)
   }, [metamaskAuthenticated])
 
-  useEffect(() => { 
+  useEffect(() => {
 
     const onUseEffect = async () => {
       console.log(`worldcoinAuthenticated: ${worldcoinAuthenticated}`)
@@ -48,12 +48,15 @@ function Homepage() {
       return (
         <div>
           <Web3Button />
-          <br/>
-          <br/>
+          <br />
+          <br />
+          <Button onClick={logout} variant="contained" color="primary"> Logout </Button>
+          <br />
+          <br />
           <Button onClick={logout} variant="contained" color="primary"> Logout Worldcoin </Button>
         </div>
       )
-    } else { 
+    } else {
       return (
         <div>
           <Login />
@@ -63,7 +66,7 @@ function Homepage() {
   }
 
   return (
-    <div>{ getPage() }</div>
+    <div>{getPage()}</div>
   );
 }
 
