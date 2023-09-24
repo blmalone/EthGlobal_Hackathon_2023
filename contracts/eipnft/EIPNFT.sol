@@ -123,7 +123,7 @@ contract EIPNFT is IERC2981, ERC721 {
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         require(_exists(tokenId), "Nonexistent token");
         uint256 eipNumber = _getEIPNumber(tokenId);
-        string memory uri = string(_tokenUriMapping[tokenId]);
+        string memory uri = string(abi.encodePacked(_tokenUriMapping[tokenId]));
         return uri;
     }
 
