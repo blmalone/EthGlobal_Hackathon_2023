@@ -1,19 +1,19 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-OPTIMISM
-const config: any = {
-  paymasterAddress: '0xeb7b7bEc43eBf00a3553181eC868324195d95244',
-  nftContractAddress: '0x776084eB7ae160E669b0994ce35166b0E26b0bf6',
-  smartAccountAddress: '0xD723C699D9Df0B813C61A1716F964dc4C48789d8'
-};
+// optimism
+// const config: any = {
+//   paymasterAddress: '0xeb7b7bEc43eBf00a3553181eC868324195d95244',
+//   nftContractAddress: '0x776084eB7ae160E669b0994ce35166b0E26b0bf6',
+//   smartAccountAddress: '0xD723C699D9Df0B813C61A1716F964dc4C48789d8'
+// };
 
 // POLYGON
-// const config: any = {
-//   paymasterAddress: '0x40c6e6A6540C30BcBEe1E4991DDbB5f91F4645DC',
-//   nftContractAddress: '0x7123Eb1ACc403e18FdCc22FE1E19D2f2Ede018ab',
-//   smartAccountAddress: '0xE21DB5EF1719Ee378D014D8d48BF0AA3c812f75A'
-// };
+const config: any = {
+  paymasterAddress: '0x40c6e6A6540C30BcBEe1E4991DDbB5f91F4645DC',
+  nftContractAddress: '0x7123Eb1ACc403e18FdCc22FE1E19D2f2Ede018ab',
+  smartAccountAddress: '0xE21DB5EF1719Ee378D014D8d48BF0AA3c812f75A'
+};
 
 const shouldDeploy = process.env.DEPLOY_CONTRACTS || "false"
 const shouldDeployV2 = false;
@@ -219,9 +219,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const erc20Token = new hre.ethers.Interface(partialERC20TokenABI);
 
   const opCallData = account.encodeFunctionData("execute", [
-    "90edff65c3ffd16dd7bcc44640fc8e2f7a0e25d5", //"4200000000000000000000000000000000000006", // WETH
+    "a6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa", //"4200000000000000000000000000000000000006", // WETH
     0,
-    erc20Token.encodeFunctionData("transfer", [smartAccountAddress, hre.ethers.parseEther("000000000000000001")]),
+    erc20Token.encodeFunctionData("transfer", [smartAccountAddress, hre.ethers.parseEther("0.000007820865194275")]),
   ]);
 
   console.log(opCallData);
