@@ -21,7 +21,7 @@ async function createUnsignedUserOp(request: any): Promise<any> {
   console.log("########## We're in createUnsignedUserOp");
   console.log("inside the snap");
 
-  const nonce = "0x6"; // await window.ethereum.request({ method: 'eth_getTransactionCount', params: [smartAccountAddress, 'latest'] });
+  const nonce = "0x0"; // await window.ethereum.request({ method: 'eth_getTransactionCount', params: [smartAccountAddress, 'latest'] });
   console.log(`Retrieved nonce: ${nonce}`);
 
   const dataForEstimate = { sender: `0x${smartAccountAddress}`, nonce };
