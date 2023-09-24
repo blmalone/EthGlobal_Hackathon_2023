@@ -131,7 +131,7 @@ const Index = () => {
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Welcome to <Span>Gas Pass</Span>
       </Heading>
       <Subtitle>
         Get started by editing <code>src/index.ts</code>

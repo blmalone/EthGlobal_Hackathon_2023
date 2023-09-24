@@ -2,14 +2,16 @@ const express = require('express');
 require('dotenv').config();
 const axios = require('axios');
 const app = express()
+const cors = require("cors")
 
 app.use(express.json());
+app.use(cors())
 
 
 const { Bundler } = require('@biconomy/bundler');
 const { ChainId } = require("@biconomy/core-types");
 
-const chainId = ChainId.OPTIMISM_GOERLI_TESTNET;
+const chainId = ChainId.POLYGON_MUMBAI;
 
 const bundler = new Bundler({
   bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
@@ -60,7 +62,7 @@ app.get('/nft', async (req, res) => {
 });
 
 app.post('/bundler/estimateUserOpGas', async (req, res) => {
-  console.log("body", req.body);
+  console.log("body estimate", req.body);
   const sender = req.body.sender;
   const nonce = req.body.nonce;
   const signature = "0x703fb95ca8148f4d38693c413f06293e9a6f8b39c89fe433187c18761ba13004703fb95ca8148f4d38693c413f06293e9a6f8b39c89fe433187c18761ba13004";
@@ -71,20 +73,19 @@ app.post('/bundler/estimateUserOpGas', async (req, res) => {
     nonce,
     initCode: "0x",
     callData: "0x",
-  })
-    .catch((error) => console.error(error));
+  }).catch((error) => console.error(error));
   console.log("estimate", estimate);
-  res.send(JSON.stringify(estimate));
+  return res.send(estimate);
 });
 
 app.post('/bundler/sendUserOp', async (req, res) => {
-  console.log("body", req.body.data);
+  console.log("body sendU", req.body);
   const userOp = await bundler.sendUserOp({
-    ...data
+    ...req.body
   })
     .catch((error) => console.error(error));
-  console.log("sendUserOp", estimate);
-  res.send(JSON.stringify(userOp));
+  console.log(`User operation: ${JSON.stringify(userOp)}`);
+  return res.send(JSON.stringify(userOp));
 });
 
 app.listen(port, () => {

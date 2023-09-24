@@ -68,13 +68,17 @@ contract EIPNFT is IERC2981, ERC721 {
     }
 
     function authenticatedMint(
-        address _authorAddress,
-        uint8 _tokenUriId
+        address _authorAddress
     ) public returns (uint256) {
+        // uint256 newTokenId = _getNextTokenId();
+        // _receiverAddresses[newTokenId] = _authorAddress;
+        // safeMint(newTokenId, _authorAddress);
+        // // _tokenUriMapping[newTokenId] = 1;
+        // _incrementTokenId();
+        // return newTokenId;
         uint256 newTokenId = _getNextTokenId();
         _receiverAddresses[newTokenId] = _authorAddress;
         safeMint(newTokenId, _authorAddress);
-        _tokenUriMapping[newTokenId] = _tokenUriId;
         _incrementTokenId();
         return newTokenId;
     }
@@ -122,8 +126,8 @@ contract EIPNFT is IERC2981, ERC721 {
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         require(_exists(tokenId), "Nonexistent token");
         uint256 eipNumber = _getEIPNumber(tokenId);
-        string memory uri = string(abi.encodePacked(_tokenUriMapping[tokenId]));
-        return uri;
+        // string memory uri = string(abi.encodePacked(_tokenUriMapping[tokenId]));
+        return "";
     }
 
     /// @inheritdoc	IERC2981

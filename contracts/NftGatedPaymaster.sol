@@ -46,7 +46,7 @@ contract NftGatedPaymaster is BasePaymaster {
             if (hasBalanceForNFTCollection(erc721ContractsArray[i], userOp.sender)) ownsNFT = true;
         }
         require(ownsNFT, "Smart Account does not qualify for free gas.");
-        return ("", 1);
+        return ("", 0);
     }
 
     function hasBalanceForNFTCollection(address _contractAddress, address _owner) internal view returns (bool) {

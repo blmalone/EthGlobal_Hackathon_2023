@@ -16,27 +16,55 @@ export interface UserOperation {
 }
 
 async function createUnsignedUserOp(request: any): Promise<any> {
-  // <OB> TODO HARDCODE
-  const accountAddress = "0x35D67Ae919CD86621C2B31F1eAF30733Fe893db8";
+  const smartAccountAddress = "E21DB5EF1719Ee378D014D8d48BF0AA3c812f75A" // "D723C699D9Df0B813C61A1716F964dc4C48789d8";
+  const paymasterAddress = "0x40c6e6A6540C30BcBEe1E4991DDbB5f91F4645DC" // "0xeb7b7bEc43eBf00a3553181eC868324195d95244";
   const entryPointAddress = ""
   console.log("########## We're in createUnsignedUserOp");
   console.log("inside the snap");
-  // const nonce = 0;
-  const nonce = await window.ethereum.request({ method: 'eth_getTransactionCount', params: [accountAddress, 'latest'] });
+
+  const nonce = "0x0"; // await window.ethereum.request({ method: 'eth_getTransactionCount', params: [smartAccountAddress, 'latest'] });
   console.log(`Retrieved nonce: ${nonce}`);
+
+  const dataForEstimate = { sender: `0x${smartAccountAddress}`, nonce };
+  console.log(`Estimate api payload: ${dataForEstimate}`);
+
+  const urlPath = "bundler/estimateUserOpGas"
+
+  // const response = await fetch(`http://localhost:4001/${urlPath}`,
+  //   {
+  //     method: "POST", headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(dataForEstimate)
+  //   });
+  // const estimateResponse = await response.json();
+  // console.log(`Estimate response payload:`, estimateResponse);
+  // const destinationAddress = smartAccountAddress;
+  // const amount = "9184E72A000"; // 10000000000000 wei
+  // const toAddress = "4200000000000000000000000000000000000006"; // WETH contract
+
+  // `0x940d3c60000000000000000000000000${toAddress}0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000044a9059cbb000000000000000000000000${destinationAddress}00000000000000000000000000000000000000000000000000000${amount}00000000000000000000000000000000000000000000000000000000`,
   const userOp: UserOperation = {
-    sender: request.from,
+    sender: `0x${smartAccountAddress}`,
     nonce: nonce,
     initCode: "0x",
-    callData: "0x", // 
-    callGasLimit: '', // this
-    verificationGasLimit: '', // this
-    preVerificationGas: '', // this
-    maxFeePerGas: '', // this
-    maxPriorityFeePerGas: '', // this
+    callData: "0xb61d27f60000000000000000000000004200000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044a9059cbb000000000000000000000000e21db5ef1719ee378d014d8d48bf0aa3c812f75a0000000000000000000000000000000000000000000000000de0b6b3a764000000000000000000000000000000000000000000000000000000000000", // optimism: "0xb61d27f60000000000000000000000004200000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044a9059cbb000000000000000000000000d723c699d9df0b813c61a1716f964dc4c48789d80000000000000000000000000000000000000000000000000de0b6b3a764000000000000000000000000000000000000000000000000000000000000",
+    callGasLimit: "100000",// estimateResponse.callGasLimit, // this
+    verificationGasLimit: "100000", // estimateResponse.verificationGasLimit, // this
+    preVerificationGas: "100000", //estimateResponse.preVerificationGas, // this
+    maxFeePerGas: "1000000000", //estimateResponse.maxFeePerGas, // this
+    maxPriorityFeePerGas: "5000000000",// estimateResponse.maxPriorityFeePerGas, // this
     signature: "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c",
-    paymasterAndData: "0xd06B9c0A22556398c0486c18849477C1F522F1D2"
+    paymasterAndData: paymasterAddress
   }
+  console.log(userOp.callData);
+
+  const sendUserOpPath = "bundler/sendUserOp";
+  const submitResponse = await fetch(`http://localhost:4001/${sendUserOpPath}`,
+    {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userOp)
+    });
+  const finalResult = await submitResponse.json();
+  console.log(finalResult);
   return userOp;
 };
 
@@ -83,6 +111,3 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
       throw new Error(`Method not found: ${request}`);
   }
 };
-
-
-const SMART_ACCOUNT_ABI = [{ "type": "constructor", "stateMutability": "undefined", "payable": false, "inputs": [{ "type": "address", "name": "anEntryPoint" }] }, { "type": "event", "anonymous": false, "name": "AdminChanged", "inputs": [{ "type": "address", "name": "previousAdmin", "indexed": false }, { "type": "address", "name": "newAdmin", "indexed": false }] }, { "type": "event", "anonymous": false, "name": "BeaconUpgraded", "inputs": [{ "type": "address", "name": "beacon", "indexed": true }] }, { "type": "event", "anonymous": false, "name": "Initialized", "inputs": [{ "type": "uint8", "name": "version", "indexed": false }] }, { "type": "event", "anonymous": false, "name": "SmartAccountInitialized", "inputs": [{ "type": "address", "name": "entryPoint", "indexed": true }, { "type": "address", "name": "owner", "indexed": true }] }, { "type": "event", "anonymous": false, "name": "Upgraded", "inputs": [{ "type": "address", "name": "implementation", "indexed": true }] }, { "type": "function", "name": "addDeposit", "constant": false, "stateMutability": "payable", "payable": true, "inputs": [], "outputs": [] }, { "type": "function", "name": "entryPoint", "constant": true, "stateMutability": "view", "payable": false, "inputs": [], "outputs": [{ "type": "address" }] }, { "type": "function", "name": "execute", "constant": false, "payable": false, "inputs": [{ "type": "address", "name": "dest" }, { "type": "uint256", "name": "value" }, { "type": "bytes", "name": "func" }], "outputs": [] }, { "type": "function", "name": "executeBatch", "constant": false, "payable": false, "inputs": [{ "type": "address[]", "name": "dest" }, { "type": "uint256[]", "name": "value" }, { "type": "bytes[]", "name": "func" }], "outputs": [] }, { "type": "function", "name": "getDeposit", "constant": true, "stateMutability": "view", "payable": false, "inputs": [], "outputs": [{ "type": "uint256" }] }, { "type": "function", "name": "getNonce", "constant": true, "stateMutability": "view", "payable": false, "inputs": [], "outputs": [{ "type": "uint256" }] }, { "type": "function", "name": "initialize", "constant": false, "payable": false, "inputs": [{ "type": "address", "name": "anOwner" }], "outputs": [] }, { "type": "function", "name": "onERC1155BatchReceived", "constant": true, "stateMutability": "pure", "payable": false, "inputs": [{ "type": "address" }, { "type": "address" }, { "type": "uint256[]" }, { "type": "uint256[]" }, { "type": "bytes" }], "outputs": [{ "type": "bytes4" }] }, { "type": "function", "name": "onERC1155Received", "constant": true, "stateMutability": "pure", "payable": false, "inputs": [{ "type": "address" }, { "type": "address" }, { "type": "uint256" }, { "type": "uint256" }, { "type": "bytes" }], "outputs": [{ "type": "bytes4" }] }, { "type": "function", "name": "onERC721Received", "constant": true, "stateMutability": "pure", "payable": false, "inputs": [{ "type": "address" }, { "type": "address" }, { "type": "uint256" }, { "type": "bytes" }], "outputs": [{ "type": "bytes4" }] }, { "type": "function", "name": "owner", "constant": true, "stateMutability": "view", "payable": false, "inputs": [], "outputs": [{ "type": "address" }] }, { "type": "function", "name": "proxiableUUID", "constant": true, "stateMutability": "view", "payable": false, "inputs": [], "outputs": [{ "type": "bytes32" }] }, { "type": "function", "name": "supportsInterface", "constant": true, "stateMutability": "view", "payable": false, "inputs": [{ "type": "bytes4", "name": "interfaceId" }], "outputs": [{ "type": "bool" }] }, { "type": "function", "name": "tokensReceived", "constant": true, "stateMutability": "pure", "payable": false, "inputs": [{ "type": "address" }, { "type": "address" }, { "type": "address" }, { "type": "uint256" }, { "type": "bytes" }, { "type": "bytes" }], "outputs": [] }, { "type": "function", "name": "upgradeTo", "constant": false, "payable": false, "inputs": [{ "type": "address", "name": "newImplementation" }], "outputs": [] }, { "type": "function", "name": "upgradeToAndCall", "constant": false, "stateMutability": "payable", "payable": true, "inputs": [{ "type": "address", "name": "newImplementation" }, { "type": "bytes", "name": "data" }], "outputs": [] }, { "type": "function", "name": "validateUserOp", "constant": false, "payable": false, "inputs": [{ "type": "tuple", "name": "userOp", "components": [{ "type": "address", "name": "sender" }, { "type": "uint256", "name": "nonce" }, { "type": "bytes", "name": "initCode" }, { "type": "bytes", "name": "callData" }, { "type": "uint256", "name": "callGasLimit" }, { "type": "uint256", "name": "verificationGasLimit" }, { "type": "uint256", "name": "preVerificationGas" }, { "type": "uint256", "name": "maxFeePerGas" }, { "type": "uint256", "name": "maxPriorityFeePerGas" }, { "type": "bytes", "name": "paymasterAndData" }, { "type": "bytes", "name": "signature" }] }, { "type": "bytes32", "name": "userOpHash" }, { "type": "uint256", "name": "missingAccountFunds" }], "outputs": [{ "type": "uint256", "name": "validationData" }] }, { "type": "function", "name": "withdrawDepositTo", "constant": false, "payable": false, "inputs": [{ "type": "address", "name": "withdrawAddress" }, { "type": "uint256", "name": "amount" }], "outputs": [] }, { "type": "receive", "stateMutability": "payable" }]

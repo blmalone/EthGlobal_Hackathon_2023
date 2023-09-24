@@ -1,11 +1,18 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
+// OPTIMISM
+// const config: any = {
+//   paymasterAddress: '0xeb7b7bEc43eBf00a3553181eC868324195d95244',
+//   nftContractAddress: '0x776084eB7ae160E669b0994ce35166b0E26b0bf6',
+//   smartAccountAddress: '0xD723C699D9Df0B813C61A1716F964dc4C48789d8'
+// };
+
+// POLYGON
 const config: any = {
-  paymasterAddress: '0x50fDd4fAD0291d0D0089Baf1E19698eD5b73212B',
-  eipRenderAddress: '0xcA1B90E850A6ea6C01B4fAbad469B7d07eE67289',
-  nftContractAddress: '0xF8C3839CAf1e06F1760a160a568058bd1ed229Ed',
-  smartAccountAddress: '0x35D67Ae919CD86621C2B31F1eAF30733Fe893db8'
+  paymasterAddress: '0x40c6e6A6540C30BcBEe1E4991DDbB5f91F4645DC',
+  nftContractAddress: '0x7123Eb1ACc403e18FdCc22FE1E19D2f2Ede018ab',
+  smartAccountAddress: '0xE21DB5EF1719Ee378D014D8d48BF0AA3c812f75A'
 };
 
 const shouldDeploy = process.env.DEPLOY_CONTRACTS || "false"
@@ -99,17 +106,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const nftContractAbi = eipNftFactory.interface.formatJson();
   const nftContract = new hre.ethers.Contract(nftContractAddress, nftContractAbi, providerSigner);
 
-  const addNftCollection = await paymasterContract.addNFTCollection(nftContractAddress, {
+  await paymasterContract.addNFTCollection(nftContractAddress, {
     gasLimit: 100000
   });
-  console.log(addNftCollection);
   await wait(5, hre);
   console.log("nftContractAddress: ", nftContractAddress);
   const addressCountTwo = await paymasterContract.getAddressCount();
   console.log("Number of NFT collections registered to paymaster: ", parseInt(addressCountTwo, 10));
 
   const nftOwner = signers[0];
-  await nftContract.authenticatedMint(nftOwner, 1);
+  await nftContract.authenticatedMint(nftOwner);
   await wait(5, hre);
 
   const mintedOwnerBalance = await nftContract.balanceOf(signers[0].address);
@@ -121,7 +127,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
    */
   const smartAccountContractFactory = await hre.ethers.getContractFactory("SmartAccount");
   const smartAccountContractDeploy = async () => {
-//    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress, "0x65252900330FC7c9b4E567E3B774936d96A5fCb0");
     if (shouldDeployV2) {
       const deployment = await deploy("SmartAccount", {
         from: deployer,
@@ -130,14 +135,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       });
       return deployment.address;
     }
-    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress);;
+    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress, "0x65252900330FC7c9b4E567E3B774936d96A5fCb0");
     return deployedContract.getAddress();
   };
   const smartAccountAddress = await getOrDeployContractAddress(shouldDeploy, "smartAccountAddress", hre, smartAccountContractDeploy);
   const smartAccountContractAbi = smartAccountContractFactory.interface.formatJson();
   const smartAccountContract = new hre.ethers.Contract(smartAccountAddress, smartAccountContractAbi, providerSigner);
-
-  console.log(smartAccountContractAbi);
 
   const entrypointRes = await smartAccountContract.entryPoint();
   console.log("smartAccountAddress: ", smartAccountAddress, " with entrypoint: ", entrypointRes);
@@ -168,7 +171,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   */
 
   const entryPointContractFactory = await hre.ethers.getContractFactory("EntryPoint");
-  // const entryPointContractAbi = entryPointContractFactory.interface.formatJson();
+  const entryPointContractAbi = entryPointContractFactory.interface.formatJson();
   const entryPointContract = new hre.ethers.Contract(entryPointContractAddress, ENTRYPOINT_ABI, providerSigner);
   const stakeInfoPaymaster = await entryPointContract.getDepositInfo(paymasterAddress);
   const isStaked = stakeInfoPaymaster[1];
@@ -187,23 +190,41 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   */
   const depositInfoPaymaster = await entryPointContract.getDepositInfo(paymasterAddress);
   const depositAmountForPaymaster = parseInt(depositInfoPaymaster[0], 10);
-  if (depositAmountForPaymaster <= 0) {
-    await paymasterContract.deposit({ value: hre.ethers.parseEther("0.00000000000000001") });
-    await wait(5, hre);
-  } else {
-    console.log(`Already deposited for paymaster: ${paymasterAddress}`);
-  }
-  console.log(`Paymasters Deposit in Entrypoint: ${depositAmountForPaymaster}`);
-
-  /**
-  * Send tiny amount of Eth to Smart account from EOA
-  * 1. Going to be for the gasless transaction.
-  */
-  await signers[0].sendTransaction({
-    to: smartAccountAddress,
-    value: hre.ethers.parseEther("0.00000000000000001")
-  })
+  // if (depositAmountForPaymaster <= 0) {  
+  await paymasterContract.deposit({ value: hre.ethers.parseEther("0.001") });
   await wait(5, hre);
+  // } else {
+  //   console.log(`Already deposited for paymaster: ${paymasterAddress}`);
+  //   }
+  const depositInfoPaymasterAfter = await entryPointContract.getDepositInfo(paymasterAddress);
+  const depositAmountForPaymasterAfter = parseInt(depositInfoPaymasterAfter[0], 10);
+  console.log(`Paymasters Deposit in Entrypoint: ${depositAmountForPaymasterAfter}`);
+
+  // /**
+  // * Send tiny amount of Eth to Smart account from EOA
+  // * 1. Going to be for the gasless transaction.
+  // */
+  // await signers[0].sendTransaction({
+  //   to: smartAccountAddress,
+  //   value: hre.ethers.parseEther("0.00000000000000001")
+  // })
+  // await wait(5, hre);
+
+
+  const partialERC20TokenABI = [
+    "function transfer(address to, uint amount) returns (bool)",
+  ];
+  const accountABI = ["function execute(address to, uint256 value, bytes data)"];
+  const account = new hre.ethers.Interface(accountABI);
+  const erc20Token = new hre.ethers.Interface(partialERC20TokenABI);
+
+  const opCallData = account.encodeFunctionData("execute", [
+    "90edff65c3ffd16dd7bcc44640fc8e2f7a0e25d5", //"4200000000000000000000000000000000000006", // WETH
+    0,
+    erc20Token.encodeFunctionData("transfer", [smartAccountAddress, hre.ethers.parseEther("000000000000000001")]),
+  ]);
+
+  console.log(opCallData);
 };
 
 const wait = async (blocks: number, hre: HardhatRuntimeEnvironment) => {
