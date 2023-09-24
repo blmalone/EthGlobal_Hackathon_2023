@@ -2,6 +2,7 @@ import "./Login.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import Button from "@mui/material/Button";
 import React, { useEffect } from "react";
+import ImageCard from "./ImageCard";
 
 // Import the CSS file
 
@@ -21,7 +22,8 @@ function Login() {
   return (
     <div className="login-container">
       <div className="form-container">
-        <h2 style={{ color: "black" }}>Passing Gas</h2>
+        <ImageCard imageUrl='https://i.ibb.co/52cL5Qk/Gas-Pass-Logo.png'></ImageCard>
+        <br/>
         <Button onClick={handleLogin} variant="contained" color="primary">
           Login with Auth0
         </Button>

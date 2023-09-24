@@ -23,9 +23,9 @@ function Homepage() {
       console.log(`user`)
       console.log(user)
 
-      const token = await getAccessTokenSilently()  
-      console.log("token")
-      console.log(token)
+      // const token = await getAccessTokenSilently()  
+      // console.log("token")
+      // console.log(token)
 
       // const userInfo = await fetch('https://id.worldcoin.org/userinfo', {
       //   method: 'POST',
@@ -47,11 +47,10 @@ function Homepage() {
     } else if (worldcoinAuthenticated) {
       return (
         <div>
-          <ImageCard imageUrl={user.picture}></ImageCard>
           <Web3Button />
           <br/>
           <br/>
-          <Button onClick={logout} variant="contained" color="primary"> Logout </Button>
+          <Button onClick={logout} variant="contained" color="primary"> Logout Worldcoin </Button>
         </div>
       )
     } else { 
