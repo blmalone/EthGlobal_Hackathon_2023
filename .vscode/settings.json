@@ -3,6 +3,11 @@
   "editor.formatOnSave": true,
   "prettier.documentSelectors": ["**/*.sol"],
   "solidity.formatter": "prettier",
+<<<<<<< HEAD
+=======
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"},
+>>>>>>> 0632678707b9768d75f2b7ec4d910bd767d903ce
   "[solidity]": {
     "editor.defaultFormatter": "JuanBlanco.solidity"
   },

@@ -35,7 +35,7 @@ const chainIds = {
   "polygon-mainnet": 137,
   "polygon-mumbai": 80001,
   "polygon-zkevm-testnet": 1442,
-  sepolia: 11155111,
+  "ethereum-sepolia": 11155111
 };
 
 // Look on https://chainlist.org/
@@ -60,6 +60,9 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       break;
     case "base-goerli-testnet":
       jsonRpcUrl = "https://base-goerli.public.blastapi.io"; // https://chainlist.org/chain/84531
+      break;
+    case "ethereum-sepolia":
+      jsonRpcUrl = "https://eth-sepolia.g.alchemy.com/v2/nvgta2mvpiYbdCCA9s4adO-ePeLZZ0AA";
       break;
     default:
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
@@ -94,7 +97,7 @@ const config: HardhatUserConfig = {
   },
   gasReporter: {
     currency: "USD",
-    enabled: process.env.REPORT_GAS ? true : false,
+    enabled: true,
     excludeContracts: [],
     src: "./contracts",
   },
@@ -107,10 +110,10 @@ const config: HardhatUserConfig = {
     },
     ganache: {
       accounts: {
-        mnemonic,
+        mnemonic: "marble alien armed gate borrow tissue observe return cloth awesome post napkin",
       },
       chainId: chainIds.ganache,
-      url: "http://localhost:8545",
+      url: "http://localhost:7545",
     },
     arbitrum: getChainConfig("arbitrum-mainnet"),
     avalanche: getChainConfig("avalanche"),
@@ -120,7 +123,12 @@ const config: HardhatUserConfig = {
     "optimism-goerli": getChainConfig("optimism-goerli"),
     "polygon-mainnet": getChainConfig("polygon-mainnet"),
     "polygon-mumbai": getChainConfig("polygon-mumbai"),
-    sepolia: getChainConfig("sepolia"),
+    goerli: {
+      accounts: ["d27509812d5cba7dc77a7faba290ae814b37fdc82f0e70a566615e9acc90c1a8"],
+      chainId: chainIds["base-goerli-testnet"],
+      url: "https://base-goerli.public.blastapi.io",
+    },
+    "ethereum-sepolia": getChainConfig("ethereum-sepolia"),
   },
   paths: {
     artifacts: "./artifacts",

@@ -3,11 +3,13 @@
   "description": "EthGlobal Hackathon",
   "version": "1.0.0",
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "@nomicfoundation/hardhat-verify": "^1.0.0",
+    "@openzeppelin/contracts": "^4.9.3",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@typechain/ethers-v6": "^0.4.0",
     "@typechain/hardhat": "^8.0.0",
@@ -59,10 +61,15 @@
   },
   "scripts": {
     "clean": "rimraf ./artifacts ./cache ./coverage ./types ./coverage.json && pnpm typechain",
-    "compile": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat compile",
+    "compile": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat compile --verbose",
     "coverage": "hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"test/**/*.ts\" && pnpm typechain",
     "deploy:contracts": "hardhat deploy",
     "deploy:contracts:polygon:mumbai": "hardhat deploy --network polygon-mumbai",
+<<<<<<< HEAD
+=======
+    "deploy:contracts:ganache": "hardhat deploy --network ganache",
+    "deploy:contracts:goerli": "hardhat deploy --network goerli",
+>>>>>>> 0632678707b9768d75f2b7ec4d910bd767d903ce
     "deploy:contracts:sepolia": "hardhat deploy --network sepolia",
     "lint": "pnpm lint:sol && pnpm lint:ts && pnpm prettier:check",
     "lint:sol": "solhint --max-warnings 0 \"contracts/**/*.sol\"",
@@ -72,9 +79,16 @@
     "prettier:write": "prettier --write \"**/*.{js,json,md,sol,ts,yml}\"",
     "task:setGreeting": "hardhat task:setGreeting",
     "test": "hardhat test",
+<<<<<<< HEAD
     "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain"
   },
   "dependencies": {
+=======
+    "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain --verbose"
+  },
+  "dependencies": {
+    "drafts": "link:@openzeppelin/contracts/drafts",
+>>>>>>> 0632678707b9768d75f2b7ec4d910bd767d903ce
     "@openzeppelin/contracts": "^4.9.3"
   }
 }

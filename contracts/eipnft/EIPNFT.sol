@@ -42,6 +42,14 @@ contract EIPNFT is IERC2981, ERC721 {
     // Minting Information for a given EIP
     mapping(uint256 => MintInfo) internal _mintInfo;
 
+<<<<<<< HEAD
+=======
+    // Mapping of token id to token uri id (for images)
+    mapping(uint256 => uint8) internal _tokenUriMapping;
+
+    uint256 private _currentTokenId = 0;
+
+>>>>>>> 0632678707b9768d75f2b7ec4d910bd767d903ce
     constructor(address _owner, uint24 _defaultBips, address paymaster) ERC721("Ethereum Improvement Proposal - NFTs", "EIP", "") {
         owner = _owner;
         middle = 100000;
@@ -63,6 +71,7 @@ contract EIPNFT is IERC2981, ERC721 {
     }
 
     function authenticatedMint(
+<<<<<<< HEAD
         uint96 _eipNumber,
         uint8 _maxMints,
         address _authorAddress,
@@ -115,6 +124,32 @@ contract EIPNFT is IERC2981, ERC721 {
     function getMintCount(uint96 eipNumber) public view returns (uint256) {
         MintInfo storage currentMintInfo = _mintInfo[eipNumber];
         return currentMintInfo.mintCount;
+=======
+        address _authorAddress,
+        uint8 _tokenUriId
+
+    ) public returns (uint256) {
+ 
+        uint256 newTokenId = _getNextTokenId();
+        _tokenUriMapping[newTokenId] = _tokenUriId;
+
+        _receiverAddresses[newTokenId] = _authorAddress;
+        safeMint(newTokenId, _authorAddress);
+        _incrementTokenId();
+        return newTokenId;
+    }
+
+    function _getNextTokenId() private view returns (uint256) {
+        return _currentTokenId + 1;
+    }
+
+    function _incrementTokenId() private {
+        _currentTokenId = _currentTokenId + 1;
+    }
+
+    function getCurrentTokenId() public view returns (uint256) {
+        return _currentTokenId;
+>>>>>>> 0632678707b9768d75f2b7ec4d910bd767d903ce
     }
 
     function verifyMint(
