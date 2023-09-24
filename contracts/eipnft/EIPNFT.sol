@@ -41,6 +41,8 @@ contract EIPNFT is IERC2981, ERC721 {
     // Minting Information for a given EIP
     mapping(uint256 => MintInfo) internal _mintInfo;
 
+    uint256 private _currentTokenId = 0;
+
     constructor(address _owner, uint24 _defaultBips, address paymaster) ERC721("Ethereum Improvement Proposal - NFTs", "EIP", "") {
         owner = _owner;
         middle = 100000;
@@ -62,56 +64,25 @@ contract EIPNFT is IERC2981, ERC721 {
     }
 
     function authenticatedMint(
-        uint96 _eipNumber,
-        uint8 _maxMints,
-        address _authorAddress,
-        string memory _dateCreated,
-        string memory _eipDescription
-        // bytes memory _authSignature
+        address _authorAddress
     ) public returns (uint256) {
-        // require(
-        //     verifyMint(_eipNumber, _maxMints, _authorAddress, _dateCreated, _eipDescription, _authSignature),
-        //     "Not authorized"
-        // );
-
-        MintInfo storage currentMintInfo = _mintInfo[_eipNumber];
-        uint256 tokenNumber = currentMintInfo.mintCount + 1;
-
-        // if (bytes(_dateCreated).length > 0) {
-        //     currentMintInfo.dateCreated = _dateCreated;
-        // }
-
-        // if (bytes(_eipDescription).length > 0) {
-        //     currentMintInfo.eipDescription = _eipDescription;
-        // }
-
-        // require(!currentMintInfo.mintingComplete, "Too many mints");
-
-        // // Set mintingComplete flag to true when on the last mint for an EIP.
-        // // Contract owner can't issue new NFTs for thie EIP after this point.
-        // if (tokenNumber == _maxMints) {
-        //     currentMintInfo.mintingComplete = true;
-        // }
-
-        // if (super.balanceOf(_authorAddress) != 0) {
-        //     for (uint256 i = 1; i <= _maxMints; i++) {
-        //         uint256 currentTokenId = _encodeTokenId(_eipNumber, i);
-        //         if (_exists(currentTokenId)) {
-        //             require(super.ownerOf(currentTokenId) != _authorAddress, "Already minted");
-        //         }
-        //     }
-        // }
-
-        uint256 tokenId = _encodeTokenId(_eipNumber, tokenNumber);
-        _receiverAddresses[tokenId] = _authorAddress;
-        currentMintInfo.mintCount += 1;
-        safeMint(tokenId, _authorAddress);
-        return tokenId;
+        uint256 newTokenId = _getNextTokenId();
+        _receiverAddresses[newTokenId] = _authorAddress;
+        safeMint(newTokenId, _authorAddress);
+        _incrementTokenId();
+        return newTokenId;
     }
 
-    function getMintCount(uint96 eipNumber) public view returns (uint256) {
-        MintInfo storage currentMintInfo = _mintInfo[eipNumber];
-        return currentMintInfo.mintCount;
+    function _getNextTokenId() private view returns (uint256) {
+        return _currentTokenId + 1;
+    }
+
+    function _incrementTokenId() private {
+        _currentTokenId = _currentTokenId + 1;
+    }
+
+    function getCurrentTokenId() public view returns (uint256) {
+        return _currentTokenId;
     }
 
     function verifyMint(

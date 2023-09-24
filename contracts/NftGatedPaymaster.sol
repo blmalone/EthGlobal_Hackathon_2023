@@ -10,7 +10,8 @@ import { console } from "hardhat/console.sol";
 contract NftGatedPaymaster is BasePaymaster {
 
     // Mapping of NFT collections we support
-    address[] public erc721Contracts;
+    mapping(address => bool) public erc721Contracts;
+    address[] public erc721ContractsArray;
 
     constructor(IEntryPoint _entryPoint) BasePaymaster(_entryPoint) {
         // to support "deterministic address" factory
@@ -21,15 +22,18 @@ contract NftGatedPaymaster is BasePaymaster {
     }
 
     function addNFTCollection(address _newAddress) public onlyOwner {
-        // require(
-        //     IERC721(_newAddress).supportsInterface(0x80ac58cd), // IERC721 interface ID
-        //     "The contract does not implement the IERC721 interface"
-        // );
-        erc721Contracts.push(_newAddress);
+        require(
+            IERC721(_newAddress).supportsInterface(0x80ac58cd), // IERC721 interface ID
+            "The contract does not implement the IERC721 interface"
+        );
+        if (!erc721Contracts[_newAddress]) {
+            erc721ContractsArray.push(_newAddress);
+            erc721Contracts[_newAddress] = true;
+        }
     }
 
     function getAddressCount() public view returns (uint256) {
-        return erc721Contracts.length;
+        return erc721ContractsArray.length;
     }
 
     function _validatePaymasterUserOp(UserOperation calldata userOp, bytes32 userOpHash, uint256 maxCost)
@@ -38,16 +42,10 @@ contract NftGatedPaymaster is BasePaymaster {
         (userOp, userOpHash, maxCost);
         console.log(userOp.sender);
         bool ownsNFT = false;
-        for (uint256 i = 0; i < erc721Contracts.length; i++) {
-            if (hasBalanceForNFTCollection(erc721Contracts[i], userOp.sender)) ownsNFT = true;
+        for (uint256 i = 0; i < erc721ContractsArray.length; i++) {
+            if (hasBalanceForNFTCollection(erc721ContractsArray[i], userOp.sender)) ownsNFT = true;
         }
-        console.log("owns nft: ", ownsNFT);
-        if(!ownsNFT) {
-            console.log("we will pay.");
-        } else {
-            console.log("we won't pay.");
-        }
-        require(ownsNFT, "Smart Account does not qualify.");
+        require(ownsNFT, "Smart Account does not qualify for free gas.");
         return ("", 1);
     }
 
