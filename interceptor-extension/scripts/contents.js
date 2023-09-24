@@ -3,11 +3,15 @@ const hijackWindowEthereum = function () {
     get(target, prop, receiver) {
       const value = target[prop];
       if (value instanceof Function) {
-        return function (...args) {
+        return async function (...args) {
           const method = args[0];
           if (method.method === "eth_sendTransaction") {
-            const params = args[1];
-            console.log("blocked", method.params);
+            const params = method.params;
+            console.log("Sending params to snap", params);
+            await window.ethereum.request({
+              method: 'wallet_invokeSnap',
+              params: { snapId: "local:http://localhost:8080", request: { method: method.method, params: params } },
+            });
           } else {
             return value.apply(this === receiver ? target : this, args);
           }

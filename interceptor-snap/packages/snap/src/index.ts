@@ -28,9 +28,18 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
         },
       });
     case 'eth_sendTransaction':
-      console.log("got send tx");
-      
+      console.log('request', request);
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: 'confirmation',
+          content: panel([
+            text(`Intercepted a send TX`),
+            text(`Params: ${JSON.stringify(request)}`),
+          ]),
+        },
+      });
     default:
-      throw new Error('Method not found.');
+      throw new Error(`Method not found: ${request}`);
   }
 };
