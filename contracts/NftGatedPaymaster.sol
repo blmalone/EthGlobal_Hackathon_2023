@@ -10,8 +10,12 @@ import { console } from "hardhat/console.sol";
 contract NftGatedPaymaster is BasePaymaster {
 
     // Mapping of NFT collections we support
+<<<<<<< HEAD
+    address[] public erc721Contracts;
+=======
     mapping(address => bool) public erc721Contracts;
     address[] public erc721ContractsArray;
+>>>>>>> 0632678707b9768d75f2b7ec4d910bd767d903ce
 
     constructor(IEntryPoint _entryPoint) BasePaymaster(_entryPoint) {
         // to support "deterministic address" factory
@@ -22,6 +26,17 @@ contract NftGatedPaymaster is BasePaymaster {
     }
 
     function addNFTCollection(address _newAddress) public onlyOwner {
+<<<<<<< HEAD
+        // require(
+        //     IERC721(_newAddress).supportsInterface(0x80ac58cd), // IERC721 interface ID
+        //     "The contract does not implement the IERC721 interface"
+        // );
+        erc721Contracts.push(_newAddress);
+    }
+
+    function getAddressCount() public view returns (uint256) {
+        return erc721Contracts.length;
+=======
         require(
             IERC721(_newAddress).supportsInterface(0x80ac58cd), // IERC721 interface ID
             "The contract does not implement the IERC721 interface"
@@ -34,6 +49,7 @@ contract NftGatedPaymaster is BasePaymaster {
 
     function getAddressCount() public view returns (uint256) {
         return erc721ContractsArray.length;
+>>>>>>> 0632678707b9768d75f2b7ec4d910bd767d903ce
     }
 
     function _validatePaymasterUserOp(UserOperation calldata userOp, bytes32 userOpHash, uint256 maxCost)
@@ -42,10 +58,23 @@ contract NftGatedPaymaster is BasePaymaster {
         (userOp, userOpHash, maxCost);
         console.log(userOp.sender);
         bool ownsNFT = false;
+<<<<<<< HEAD
+        for (uint256 i = 0; i < erc721Contracts.length; i++) {
+            if (hasBalanceForNFTCollection(erc721Contracts[i], userOp.sender)) ownsNFT = true;
+        }
+        console.log("owns nft: ", ownsNFT);
+        if(!ownsNFT) {
+            console.log("we will pay.");
+        } else {
+            console.log("we won't pay.");
+        }
+        require(ownsNFT, "Smart Account does not qualify.");
+=======
         for (uint256 i = 0; i < erc721ContractsArray.length; i++) {
             if (hasBalanceForNFTCollection(erc721ContractsArray[i], userOp.sender)) ownsNFT = true;
         }
         require(ownsNFT, "Smart Account does not qualify for free gas.");
+>>>>>>> 0632678707b9768d75f2b7ec4d910bd767d903ce
         return ("", 1);
     }
 
