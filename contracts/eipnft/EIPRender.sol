@@ -37,10 +37,14 @@ library EIPRender {
                                 '{"name":"',
                                 name,
                                 '", "description": "',
+                                '{"id":',
+                                uriTokenId,
+                                ', "details": "',
                                 eipDescription,
+                                '"}"',
                                 '", "image": "',
                                 "data:image/svg+xml;base64,",
-                                generateImageByUserSelectedId(uriTokenId),
+                                generateImage(name, collectionInfo, currentOwner, dateCreated),
                                 '"}'
                             )
                         )
