@@ -1,7 +1,6 @@
-import PaymasterNftAbi from "./artifacts/PaymasterNft.json";
+import PaymasterNftAbi from "./frontend-contracts/PaymasterNft.json";
 import { Web3Button } from "@web3modal/react";
 import React, { useState } from "react";
-import { useDebounce } from "use-debounce";
 import {
   useAccount,
   useConnect,
