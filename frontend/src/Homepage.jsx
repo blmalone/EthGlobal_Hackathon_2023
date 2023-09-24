@@ -50,9 +50,6 @@ function Homepage() {
           <Web3Button />
           <br />
           <br />
-          <Button onClick={logout} variant="contained" color="primary"> Logout </Button>
-          <br />
-          <br />
           <Button onClick={logout} variant="contained" color="primary"> Logout Worldcoin </Button>
         </div>
       )

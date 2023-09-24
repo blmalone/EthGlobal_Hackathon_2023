@@ -35,7 +35,9 @@ const chainIds = {
   "polygon-mainnet": 137,
   "polygon-mumbai": 80001,
   "polygon-zkevm-testnet": 1442,
-  "ethereum-sepolia": 11155111
+  "ethereum-sepolia": 11155111,
+  "scroll-sepolia": 534351,
+  "mantle": 5001
 };
 
 // Look on https://chainlist.org/
@@ -63,6 +65,12 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       break;
     case "ethereum-sepolia":
       jsonRpcUrl = "https://sepolia.infura.io/v3/362a5fc5fdc94650b430aba7e7ce1ef3";
+      break;
+    case "scroll-sepolia":
+      jsonRpcUrl = "https://sepolia-rpc.scroll.io/";
+      break;
+    case "mantle":
+      jsonRpcUrl = "https://rpc.testnet.mantle.xyz/"
       break;
     default:
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
@@ -129,6 +137,8 @@ const config: HardhatUserConfig = {
       url: "https://base-goerli.public.blastapi.io",
     },
     sepolia: getChainConfig("ethereum-sepolia"),
+    scroll: getChainConfig("scroll-sepolia"),
+    mantle: getChainConfig("mantle")
   },
   paths: {
     artifacts: "./artifacts",

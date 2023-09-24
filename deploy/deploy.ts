@@ -105,15 +105,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(addNftCollection);
   await wait(5, hre);
   console.log("nftContractAddress: ", nftContractAddress);
-  const addressCountTwo = await paymasterContract.getAddressCount();
-  console.log("Number of NFT collections registered to paymaster: ", parseInt(addressCountTwo, 10));
+  // const addressCountTwo = await paymasterContract.getAddressCount();
+  // console.log("Number of NFT collections registered to paymaster: ", parseInt(addressCountTwo, 10));
 
   const nftOwner = signers[0];
   await nftContract.authenticatedMint(nftOwner, 1);
   await wait(5, hre);
 
-  const mintedOwnerBalance = await nftContract.balanceOf(signers[0].address);
-  console.log("Deployer NFT balance: ", parseInt(mintedOwnerBalance, 10));
+  // const mintedOwnerBalance = await nftContract.balanceOf(signers[0].address);
+  // console.log("Deployer NFT balance: ", parseInt(mintedOwnerBalance, 10));
 
 
   /**
@@ -121,7 +121,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
    */
   const smartAccountContractFactory = await hre.ethers.getContractFactory("SmartAccount");
   const smartAccountContractDeploy = async () => {
-//    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress, "0x65252900330FC7c9b4E567E3B774936d96A5fCb0");
+    //    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress, "0x65252900330FC7c9b4E567E3B774936d96A5fCb0");
     if (shouldDeployV2) {
       const deployment = await deploy("SmartAccount", {
         from: deployer,
@@ -130,7 +130,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       });
       return deployment.address;
     }
-    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress);;
+    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress, "0x253217caFc41AA349dF4886156a621e1773940CA");;
     return deployedContract.getAddress();
   };
   const smartAccountAddress = await getOrDeployContractAddress(shouldDeploy, "smartAccountAddress", hre, smartAccountContractDeploy);
