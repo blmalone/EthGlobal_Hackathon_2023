@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "dapp interceptor",
+  "description": "Intercepts all dapp send transactions and converts to snap request",
+  "version": "1.0",
+  "action": {
+    "default_popup": "hello.html"
+  },
+    "content_scripts": [
+    {
+      "js": ["scripts/contents.js"],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "permissions": [
+    "webRequest", "background", "tabs", "webRequestBlocking",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  }
+}
