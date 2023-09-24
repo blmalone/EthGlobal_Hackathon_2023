@@ -1,8 +1,11 @@
 import { defaultSnapOrigin } from '../config';
 import { GetSnapsResponse, Snap } from '../types';
 
+let accounts = [];
+
 /**
- * Get the installed snaps in MetaMask.
+ * Get the installed
+ * snaps in MetaMask.
  *
  * @returns The snaps installed in MetaMask.
  */
@@ -55,10 +58,32 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
  */
 
 export const sendHello = async () => {
-  await window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: { snapId: defaultSnapOrigin, request: { method: 'hello' } },
-  });
+  await window.ethereum
+    .request({
+      method: 'eth_sendTransaction',
+      // The following sends an EIP-1559 transaction. Legacy transactions are also supported.
+      params: [
+        {
+          from: '0x2AC510768F6dAc4C84E472bE25768466afC21c88', // The user's active address.
+          to: '0x2AC510768F6dAc4C84E472bE25768466afC21c88', // Required except during contract publications.
+          value: '11100', // Only required to send ether to the recipient from the initiating external account.
+          gasLimit: '0x5028', // Customizable by the user during MetaMask confirmation.
+          maxPriorityFeePerGas: '0x3b9aca00', // Customizable by the user during MetaMask confirmation.
+          maxFeePerGas: '0x2540be400', // Customizable by the user during MetaMask confirmation.
+        },
+      ],
+    })
+    .then((txHash) => console.log(txHash))
+    .catch((error) => console.error(error));
+
+  // await window.ethereum.request({
+  //   method: 'wallet_invokeSnap',
+  //   params: { snapId: defaultSnapOrigin, request: { method: 'hello' } },
+  // });
 };
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
+
+export const getAccount = async () => {
+  accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+};

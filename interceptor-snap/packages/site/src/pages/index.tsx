@@ -5,6 +5,7 @@ import {
   connectSnap,
   getSnap,
   sendHello,
+  getAccount,
   shouldDisplayReconnectButton,
 } from '../utils';
 import {
@@ -119,6 +120,7 @@ const Index = () => {
 
   const handleSendHelloClick = async () => {
     try {
+      await getAccount();
       await sendHello();
     } catch (e) {
       console.error(e);

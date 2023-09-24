@@ -27,6 +27,9 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
           ]),
         },
       });
+    case 'eth_sendTransaction':
+      console.log("got send tx");
+      
     default:
       throw new Error('Method not found.');
   }
