@@ -11,7 +11,7 @@ app.use(cors())
 const { Bundler } = require('@biconomy/bundler');
 const { ChainId } = require("@biconomy/core-types");
 
-const chainId = ChainId.POLYGON_MUMBAI;
+const chainId = ChainId.OPTIMISM_GOERLI_TESTNET;
 
 const bundler = new Bundler({
   bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
