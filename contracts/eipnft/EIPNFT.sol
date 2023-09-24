@@ -3,7 +3,6 @@ pragma solidity 0.8.12;
 
 import "./ERC721.sol";
 import "./ECDSA.sol";
-import "./EIPRender.sol";
 import "./IERC2981.sol";
 
 /*
