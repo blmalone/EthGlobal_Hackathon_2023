@@ -49,7 +49,8 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://bsc-dataseed1.binance.org";
       break;
     case "optimism-goerli":
-      jsonRpcUrl = "https://goerli.optimism.io";
+      jsonRpcUrl = "https://opt-goerli.g.alchemy.com/v2/rCoAKlzApgyPIg0i7JTnex7z3VEi7tMp"
+      // "https://goerli.optimism.io";
       break;
     case "polygon-mumbai":
       jsonRpcUrl = "https://endpoints.omniatech.io/v1/matic/mumbai/public";
