@@ -75,11 +75,6 @@ export const sendHello = async () => {
     })
     .then((txHash) => console.log(txHash))
     .catch((error) => console.error(error));
-
-  // await window.ethereum.request({
-  //   method: 'wallet_invokeSnap',
-  //   params: { snapId: defaultSnapOrigin, request: { method: 'hello' } },
-  // });
 };
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
