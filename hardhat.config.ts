@@ -53,7 +53,7 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       // "https://goerli.optimism.io";
       break;
     case "polygon-mumbai":
-      jsonRpcUrl = "https://endpoints.omniatech.io/v1/matic/mumbai/public";
+      jsonRpcUrl = "https://polygon-mumbai.infura.io/v3/362a5fc5fdc94650b430aba7e7ce1ef3";
       break;
     case "polygon-zkevm-testnet":
       jsonRpcUrl = "https://rpc.public.zkevm-test.net";
@@ -62,7 +62,7 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://base-goerli.public.blastapi.io"; // https://chainlist.org/chain/84531
       break;
     case "ethereum-sepolia":
-      jsonRpcUrl = "https://eth-sepolia.g.alchemy.com/v2/nvgta2mvpiYbdCCA9s4adO-ePeLZZ0AA";
+      jsonRpcUrl = "https://sepolia.infura.io/v3/362a5fc5fdc94650b430aba7e7ce1ef3";
       break;
     default:
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
@@ -128,7 +128,7 @@ const config: HardhatUserConfig = {
       chainId: chainIds["base-goerli-testnet"],
       url: "https://base-goerli.public.blastapi.io",
     },
-    "ethereum-sepolia": getChainConfig("ethereum-sepolia"),
+    sepolia: getChainConfig("ethereum-sepolia"),
   },
   paths: {
     artifacts: "./artifacts",

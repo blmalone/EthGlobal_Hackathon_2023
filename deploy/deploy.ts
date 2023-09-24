@@ -9,6 +9,7 @@ const config: any = {
 };
 
 const shouldDeploy = process.env.DEPLOY_CONTRACTS || "false"
+const shouldDeployV2 = false;
 
 const getOrDeployContractAddress = async (shouldDeploy: string, contract: string, hre: HardhatRuntimeEnvironment, deployFunc: () => Promise<string>): Promise<string> => {
   if (shouldDeploy == "true") {
@@ -29,6 +30,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(`\n############################ `);
   console.log(`######### Gas Pass #########`);
   console.log(`############################ `);
+  const { deployer } = await hre.getNamedAccounts();
+  const { deploy } = hre.deployments;
   const signers = await hre.ethers.getSigners();
   const providerSigner = await hre.ethers.provider.getSigner();
 
@@ -42,6 +45,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const entryPointContractAddress = "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789";
 
   const deployPaymasterContract = async () => {
+    if (shouldDeployV2) {
+      const deployment = await deploy("NftGatedPaymaster", {
+        from: deployer,
+        args: [entryPointContractAddress],
+        log: true,
+      });
+      return deployment.address;
+    }
+
     const deployedContract = await nftGatedPaymasterFactory.connect(signers[0]).deploy(entryPointContractAddress);
     const address = deployedContract.getAddress();
     return address;
@@ -53,21 +65,33 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   /**
    * Deploying NFT contracts
-   */
+   
   const eipRenderFactory = await hre.ethers.getContractFactory("EIPRender");
   const eipRenderContract = async () => {
+    if (shouldDeployV2) {
+      const deployment = await deploy("EIPRender", {
+        from: deployer,
+        args: [],
+        log: true,
+      });
+      return deployment.address;
+    }
     const deployedContract = await eipRenderFactory.connect(signers[0]).deploy();
     return deployedContract.getAddress();
   };
   const eipRenderAddress = await getOrDeployContractAddress(shouldDeploy, "eipRenderAddress", hre, eipRenderContract);
   console.log(`eipRenderAddress: ${eipRenderAddress}`);
-
-  const eipNftFactory = await hre.ethers.getContractFactory("EIPNFT", {
-    libraries: {
-      EIPRender: eipRenderAddress,
-    },
-  });
+*/
+  const eipNftFactory = await hre.ethers.getContractFactory("EIPNFT");
   const eipNftContract = async () => {
+    if (shouldDeployV2) {
+      const deployment = await deploy("EIPNFT", {
+        from: deployer,
+        args: [signers[0].address, 1000, paymasterAddress], // we do not need EIP Factory as a library to link
+        log: true,
+      });
+      return deployment.address;
+    }
     const deployedContract = await eipNftFactory.connect(signers[0]).deploy(signers[0].address, 1000, paymasterAddress);
     return deployedContract.getAddress();
   };
@@ -75,14 +99,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const nftContractAbi = eipNftFactory.interface.formatJson();
   const nftContract = new hre.ethers.Contract(nftContractAddress, nftContractAbi, providerSigner);
 
-  await paymasterContract.addNFTCollection(nftContractAddress);
+  const addNftCollection = await paymasterContract.addNFTCollection(nftContractAddress, {
+    gasLimit: 100000
+  });
+  console.log(addNftCollection);
   await wait(5, hre);
   console.log("nftContractAddress: ", nftContractAddress);
   const addressCountTwo = await paymasterContract.getAddressCount();
   console.log("Number of NFT collections registered to paymaster: ", parseInt(addressCountTwo, 10));
 
   const nftOwner = signers[0];
-  await nftContract.authenticatedMint(nftOwner);
+  await nftContract.authenticatedMint(nftOwner, 1);
   await wait(5, hre);
 
   const mintedOwnerBalance = await nftContract.balanceOf(signers[0].address);
@@ -94,7 +121,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
    */
   const smartAccountContractFactory = await hre.ethers.getContractFactory("SmartAccount");
   const smartAccountContractDeploy = async () => {
-    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress, "0x65252900330FC7c9b4E567E3B774936d96A5fCb0");
+//    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress, "0x65252900330FC7c9b4E567E3B774936d96A5fCb0");
+    if (shouldDeployV2) {
+      const deployment = await deploy("SmartAccount", {
+        from: deployer,
+        args: [entryPointContractAddress], // we do not need EIP Factory as a library to link
+        log: true,
+      });
+      return deployment.address;
+    }
+    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress);;
     return deployedContract.getAddress();
   };
   const smartAccountAddress = await getOrDeployContractAddress(shouldDeploy, "smartAccountAddress", hre, smartAccountContractDeploy);
@@ -122,7 +158,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   console.log({
     paymasterAddress: paymasterAddress,
-    eipRenderAddress: eipRenderAddress,
+    // eipRenderAddress: eipRenderAddress,
     nftContractAddress: nftContractAddress,
     smartAccountAddress: smartAccountAddress
   });

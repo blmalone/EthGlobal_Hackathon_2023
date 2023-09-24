@@ -3,7 +3,6 @@ pragma solidity 0.8.12;
 
 import "./ERC721.sol";
 import "./ECDSA.sol";
-import "./EIPRender.sol";
 import "./IERC2981.sol";
 
 /*
@@ -36,10 +35,15 @@ contract EIPNFT is IERC2981, ERC721 {
         bool mintingComplete;
         string dateCreated;
         string eipDescription;
+        uint8 tokenUriId;
     }
 
     // Minting Information for a given EIP
     mapping(uint256 => MintInfo) internal _mintInfo;
+
+    // Mapping of token id to token uri id (for images)
+    mapping(uint256 => uint8) internal _tokenUriMapping;
+
 
     uint256 private _currentTokenId = 0;
 
@@ -64,11 +68,13 @@ contract EIPNFT is IERC2981, ERC721 {
     }
 
     function authenticatedMint(
-        address _authorAddress
+        address _authorAddress,
+        uint8 _tokenUriId
     ) public returns (uint256) {
         uint256 newTokenId = _getNextTokenId();
         _receiverAddresses[newTokenId] = _authorAddress;
         safeMint(newTokenId, _authorAddress);
+        _tokenUriMapping[newTokenId] = _tokenUriId;
         _incrementTokenId();
         return newTokenId;
     }
@@ -116,25 +122,8 @@ contract EIPNFT is IERC2981, ERC721 {
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         require(_exists(tokenId), "Nonexistent token");
         uint256 eipNumber = _getEIPNumber(tokenId);
-        string memory name = string(abi.encodePacked("EIP-", eipNumber.toString()));
-
-        address currentOwner = super.ownerOf(tokenId);
-        return
-            EIPRender.generateMetadata(
-                name,
-                string(
-                    abi.encodePacked(
-                        "(",
-                        _getTokenNumber(tokenId).toString(),
-                        "/",
-                        _mintInfo[eipNumber].mintCount.toString(),
-                        ")"
-                    )
-                ),
-                currentOwner,
-                _mintInfo[eipNumber].dateCreated,
-                _mintInfo[eipNumber].eipDescription
-            );
+        string memory uri = string(abi.encodePacked(_tokenUriMapping[tokenId]));
+        return uri;
     }
 
     /// @inheritdoc	IERC2981
