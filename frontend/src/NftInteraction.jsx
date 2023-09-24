@@ -1,6 +1,7 @@
 import PaymasterNftAbi from "./frontend-contracts/PaymasterNft.json";
 import { Web3Button } from "@web3modal/react";
 import React, { useState } from "react";
+import * as featureFlags from './services/featureFlags';
 import {
   useAccount,
   useConnect,
@@ -29,7 +30,7 @@ export function NftInteraction() {
   const images = [1, 2, 3, 4, 5];
 
   const { config } = usePrepareContractWrite({
-    address: process.env.REACT_APP_NFT_CONTRACT_ADDRESS,
+    address: featureFlags.getNftContractAddress(),
     abi: PaymasterNftAbi.abi,
     functionName: "awardItem",
     args: [address, `${selectedImageId}`],

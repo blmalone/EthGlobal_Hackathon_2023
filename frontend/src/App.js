@@ -3,11 +3,12 @@ import Homepage from "./Homepage.jsx";
 import logo from "./logo.svg";
 import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { configureChains, createConfig, sepolia, WagmiConfig } from "wagmi";
 import { arbitrum, goerli, mainnet, polygon } from "wagmi/chains";
 
-const chains = [arbitrum, mainnet, polygon, goerli];
+const chains = [arbitrum, mainnet, polygon, goerli, sepolia];
 const projectId = "aae549724982e724fe290ad620cfa847";
+
 
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
 

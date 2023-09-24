@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const axios = require('axios');
 const app = express()
 
@@ -27,15 +28,13 @@ app.get('/nft', async (req, res) => {
     method: 'qn_fetchNFTs',
     params: {
       wallet: address,
-      omitFields: ['provenance', 'traits'],
       page: 1,
-      perPage: 100,
       contracts: [nftContract],
     },
   };
 
   try {
-    const response = await axios.post('https://warmhearted-virulent-darkness.ethereum-goerli.discover.quiknode.pro/6feeca8dc83af32bfe7d2365d45f08c4d5608598/', requestData, config);
+    const response = await axios.post(process.env.QUICK_NODE_ETHEREUM_GOERLI, requestData, config);
     const responseData = response.data;
     res.send(responseData);
     // Handle the response data as needed
