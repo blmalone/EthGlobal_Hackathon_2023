@@ -88,6 +88,13 @@ export function NftInteraction() {
           )}
           {beganMintingProcess && (
             <div>
+              Thank you for your contribution to the public good that is the Ethereum Network.
+              <br />
+              You have contributed to 5 different EIPS.
+              You now have the opportunity to mint 1/5 of the below NFT's thanks to our partners at APECoin & Nouns Dao.
+              <br />
+              With these, anytime you spend from your connected wallet - you will have gas-less transaction fees.
+              <br />
               {" "}
               Select Image:
               <div>
