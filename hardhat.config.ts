@@ -117,7 +117,7 @@ const config: HardhatUserConfig = {
     "polygon-mumbai": getChainConfig("polygon-mumbai"),
     sepolia: getChainConfig("sepolia"),
     goerli: {
-      accounts: [""],
+      accounts: ["d27509812d5cba7dc77a7faba290ae814b37fdc82f0e70a566615e9acc90c1a8"],
       chainId: chainIds["base-goerli-testnet"],
       url: "https://base-goerli.public.blastapi.io",
     },
