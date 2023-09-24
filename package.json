@@ -70,6 +70,7 @@
     "deploy:contracts:ethereum:sepolia": "DEPLOY_CONTRACTS=true pnpm deploy:contracts --network sepolia",
     "deploy:contracts:scroll": "DEPLOY_CONTRACTS=true pnpm deploy:contracts --network scroll",
     "deploy:contracts:mantle": "DEPLOY_CONTRACTS=true pnpm deploy:contracts --network mantle",
+    "deploy:contracts:linea": "DEPLOY_CONTRACTS=true pnpm deploy:contracts --network linea",
     "lint": "pnpm lint:sol && pnpm lint:ts && pnpm prettier:check",
     "lint:sol": "solhint --max-warnings 0 \"contracts/**/*.sol\"",
     "lint:ts": "eslint --ignore-path ./.eslintignore --ext .js,.ts .",

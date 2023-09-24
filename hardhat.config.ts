@@ -70,7 +70,10 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://sepolia-rpc.scroll.io/";
       break;
     case "mantle":
-      jsonRpcUrl = "https://rpc.testnet.mantle.xyz/"
+      jsonRpcUrl = "https://rpc.testnet.mantle.xyz/";
+      break;
+    case "linea":
+      jsonRpcUrl = "https://linea-goerli.infura.io/v3/362a5fc5fdc94650b430aba7e7ce1ef3";
       break;
     default:
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
@@ -138,7 +141,8 @@ const config: HardhatUserConfig = {
     },
     sepolia: getChainConfig("ethereum-sepolia"),
     scroll: getChainConfig("scroll-sepolia"),
-    mantle: getChainConfig("mantle")
+    mantle: getChainConfig("mantle"),
+    linea: getChainConfig("linea")
   },
   paths: {
     artifacts: "./artifacts",
