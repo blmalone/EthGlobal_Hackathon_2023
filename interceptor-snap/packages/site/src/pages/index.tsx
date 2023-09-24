@@ -7,12 +7,14 @@ import {
   sendHello,
   getAccount,
   shouldDisplayReconnectButton,
+  sendCreateSmartAccount,
 } from '../utils';
 import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
   SendHelloButton,
+  CreateSmartAccountButton,
   Card,
 } from '../components';
 
@@ -128,6 +130,15 @@ const Index = () => {
     }
   };
 
+  const handleCreateSmartAccount = async () => {
+    try {
+      await sendCreateSmartAccount();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
   return (
     <Container>
       <Heading>
@@ -185,6 +196,25 @@ const Index = () => {
             disabled={!state.installedSnap}
           />
         )}
+        <Card
+          content={{
+            title: 'Create Smart Account',
+            description:
+              'Display a custom message within a confirmation screen in MetaMask.',
+            button: (
+              <CreateSmartAccountButton
+                onClick={handleCreateSmartAccount}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
         <Card
           content={{
             title: 'Send Hello message',

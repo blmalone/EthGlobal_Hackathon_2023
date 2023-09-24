@@ -1,7 +1,52 @@
 import { defaultSnapOrigin } from '../config';
 import { GetSnapsResponse, Snap } from '../types';
+import { IPaymaster, BiconomyPaymaster } from '@biconomy/paymaster'
+import { IBundler, Bundler } from '@biconomy/bundler'
+import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS } from "@biconomy/account"
+import { Wallet, providers, ethers } from 'ethers';
+import { ChainId } from "@biconomy/core-types";
 
-let accounts = [];
+const chainId = ChainId.OPTIMISM_GOERLI_TESTNET;
+
+const bundler: IBundler = new Bundler({
+  // get from biconomy dashboard https://dashboard.biconomy.io/
+  bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
+  chainId, // or any supported chain of your choice
+  entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+});
+
+const paymaster: IPaymaster = new BiconomyPaymaster({
+  // get from biconomy dashboard https://dashboard.biconomy.io/
+  paymasterUrl:
+    'https://paymaster.biconomy.io/api/v1/420/2G9l4Jq-W.72a5f863-2b4c-4848-8a8c-6d41cc282d36',
+});
+
+
+const connect = async () => {
+  const { ethereum } = window;
+  try {
+    const provider = new ethers.providers.Web3Provider(ethereum)
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    const ownerShipModule = ECDSAOwnershipValidationModule.create({
+      signer: signer,
+      moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE
+    })
+    let biconomySmartAccount = await BiconomySmartAccountV2.create({
+      chainId: ChainId.POLYGON_MUMBAI,
+      bundler: bundler,
+      paymaster: paymaster,
+      entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+      defaultValidationModule: ownerShipModule,
+      activeValidationModule: ownerShipModule
+    })
+    const address = await biconomySmartAccount.getAccountAddress()
+    console.log(address)
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 /**
  * Get the installed
@@ -66,7 +111,7 @@ export const sendHello = async () => {
         {
           from: '0x2AC510768F6dAc4C84E472bE25768466afC21c88', // The user's active address.
           to: '0x2AC510768F6dAc4C84E472bE25768466afC21c88', // Required except during contract publications.
-          value: '11100', // Only required to send ether to the recipient from the initiating external account.
+          value: '0', // Only required to send ether to the recipient from the initiating external account.
           gasLimit: '0x5028', // Customizable by the user during MetaMask confirmation.
           maxPriorityFeePerGas: '0x3b9aca00', // Customizable by the user during MetaMask confirmation.
           maxFeePerGas: '0x2540be400', // Customizable by the user during MetaMask confirmation.
@@ -81,4 +126,8 @@ export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
 
 export const getAccount = async () => {
   accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+};
+
+export const sendCreateSmartAccount = async () => {
+  await connect().then((txHash) => console.log(txHash));
 };

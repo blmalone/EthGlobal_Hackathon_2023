@@ -98,6 +98,12 @@ export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
   return <Button {...props}>Simulate Send Transaction</Button>;
 };
 
+export const CreateSmartAccountButton = (
+  props: ComponentProps<typeof Button>,
+) => {
+  return <Button {...props}>CreateSmartAccount</Button>;
+};
+
 export const HeaderButtons = ({
   state,
   onConnectClick,

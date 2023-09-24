@@ -17,7 +17,7 @@ deployments
 .pnp.*
 coverage.json
 package-lock.json
-yarn.lock
+
 .idea/*
 
 

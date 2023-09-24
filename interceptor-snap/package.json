@@ -47,5 +47,19 @@
   "packageManager": "yarn@3.2.1",
   "engines": {
     "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "@biconomy/account": "^3.1.0",
+    "@biconomy/bundler": "^3.1.0",
+    "@biconomy/common": "^3.1.0",
+    "@biconomy/core-types": "^3.1.0",
+    "@biconomy/modules": "^3.1.0",
+    "@biconomy/paymaster": "^3.1.0",
+    "browserify": "^17.0.0",
+    "buffer": "^6.0.3",
+    "ethers": "5.7.2",
+    "stream": "^0.0.2",
+    "stream-browserify": "^3.0.0",
+    "uuid": "^9.0.1"
   }
 }
