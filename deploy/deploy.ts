@@ -82,7 +82,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log("Number of NFT collections registered to paymaster: ", parseInt(addressCountTwo, 10));
 
   const nftOwner = signers[0];
-  await nftContract.authenticatedMint(nftOwner);
+  await nftContract.authenticatedMint(nftOwner, 1);
   await wait(5, hre);
 
   const mintedOwnerBalance = await nftContract.balanceOf(signers[0].address);

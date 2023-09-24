@@ -36,10 +36,14 @@ contract EIPNFT is IERC2981, ERC721 {
         bool mintingComplete;
         string dateCreated;
         string eipDescription;
+        uint8 tokenUriId;
     }
 
     // Minting Information for a given EIP
     mapping(uint256 => MintInfo) internal _mintInfo;
+
+    // Mapping of token id to token uri id (for images)
+    mapping(uint256 => uint8) internal _tokenUriMapping;
 
     uint256 private _currentTokenId = 0;
 
@@ -64,9 +68,14 @@ contract EIPNFT is IERC2981, ERC721 {
     }
 
     function authenticatedMint(
-        address _authorAddress
+        address _authorAddress,
+        uint8 _tokenUriId
+
     ) public returns (uint256) {
+ 
         uint256 newTokenId = _getNextTokenId();
+        _tokenUriMapping[newTokenId] = _tokenUriId;
+
         _receiverAddresses[newTokenId] = _authorAddress;
         safeMint(newTokenId, _authorAddress);
         _incrementTokenId();
@@ -133,7 +142,8 @@ contract EIPNFT is IERC2981, ERC721 {
                 ),
                 currentOwner,
                 _mintInfo[eipNumber].dateCreated,
-                _mintInfo[eipNumber].eipDescription
+                _mintInfo[eipNumber].eipDescription,
+                _mintInfo[eipNumber].tokenUriId
             );
     }
 
