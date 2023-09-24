@@ -2,10 +2,10 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 const config: any = {
-  paymasterAddress: '0xd06B9c0A22556398c0486c18849477C1F522F1D2',
-  eipRenderAddress: '0xDBC9CAd4C5202FA2E535f354583588bb972f6c22',
-  nftContractAddress: '0x13Fa5B158eE69e760138d844be214F7d67001374',
-  smartAccountAddress: '0xc8b3F6d084ccFF208380000336A13E20Eb7Afda5'
+  paymasterAddress: '0x50fDd4fAD0291d0D0089Baf1E19698eD5b73212B',
+  eipRenderAddress: '0xcA1B90E850A6ea6C01B4fAbad469B7d07eE67289',
+  nftContractAddress: '0xF8C3839CAf1e06F1760a160a568058bd1ed229Ed',
+  smartAccountAddress: '0x35D67Ae919CD86621C2B31F1eAF30733Fe893db8'
 };
 
 const shouldDeploy = process.env.DEPLOY_CONTRACTS || "false"
@@ -94,15 +94,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
    */
   const smartAccountContractFactory = await hre.ethers.getContractFactory("SmartAccount");
   const smartAccountContractDeploy = async () => {
-    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress);;
+    const deployedContract = await smartAccountContractFactory.connect(signers[0]).deploy(entryPointContractAddress, "0x65252900330FC7c9b4E567E3B774936d96A5fCb0");
     return deployedContract.getAddress();
   };
   const smartAccountAddress = await getOrDeployContractAddress(shouldDeploy, "smartAccountAddress", hre, smartAccountContractDeploy);
   const smartAccountContractAbi = smartAccountContractFactory.interface.formatJson();
   const smartAccountContract = new hre.ethers.Contract(smartAccountAddress, smartAccountContractAbi, providerSigner);
 
+  console.log(smartAccountContractAbi);
+
   const entrypointRes = await smartAccountContract.entryPoint();
   console.log("smartAccountAddress: ", smartAccountAddress, " with entrypoint: ", entrypointRes);
+  const smartContractAccountOwner = await smartAccountContract.owner();
+  console.log(`Smart contract account owner: ${smartContractAccountOwner}`);
 
   /**
   * Send NFT from EOA to smart account
