@@ -1,5 +1,5 @@
 import PaymasterNftAbi from "./frontend-contracts/PaymasterNft.json";
-import { Web3Button } from "@web3modal/react";
+import Button from "@mui/material/Button";
 import React, { useState } from "react";
 import * as featureFlags from './services/featureFlags';
 import {
@@ -55,9 +55,10 @@ export function NftInteraction() {
       <div>
         <div>Connected to address: {address}</div>
         <div>
+          <br/>
           {!beganMintingProcess && (
             <div>
-              <button onClick={() => setBeganMintingProcess(true)}>Begin Minting Process</button>
+              <Button onClick={() => setBeganMintingProcess(true)} variant="contained" color="primary">Begin Minting Process</Button>
             </div>
           )}
           {beganMintingProcess && (
@@ -77,9 +78,9 @@ export function NftInteraction() {
                   );
                 })}
               </div>
-              <button onClick={doMint} disabled={!write || isLoading}>
+              <Button onClick={doMint} disabled={!write || isLoading} variant="contained" color="primary">
                 {isLoading ? "Minting..." : "Mint"}
-              </button>
+              </Button>
             </div>
           )}
           {isSuccess && (
@@ -91,12 +92,11 @@ export function NftInteraction() {
             </div>
           )}
         </div>
-        <button onClick={disconnect}>Disconnect</button>
+        <br/>
+        <Button onClick={disconnect} variant="contained" color="primary">Disconnect</Button>
       </div>
     );
   }
-
-  return <Web3Button />;
 }
 
 export default NftInteraction;

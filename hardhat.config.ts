@@ -7,7 +7,6 @@ import { resolve } from "path";
 
 import "./tasks/accounts";
 import "./tasks/greet";
-import "./tasks/taskDeploy";
 
 const dotenvConfigPath: string = process.env.DOTENV_CONFIG_PATH || "./.env";
 dotenvConfig({ path: resolve(__dirname, dotenvConfigPath) });
@@ -32,10 +31,11 @@ const chainIds = {
   hardhat: 31337,
   mainnet: 1,
   "optimism-mainnet": 10,
+  "optimism-goerli": 420,
   "polygon-mainnet": 137,
   "polygon-mumbai": 80001,
   "polygon-zkevm-testnet": 1442,
-  sepolia: 11155111,
+  "ethereum-sepolia": 11155111
 };
 
 // Look on https://chainlist.org/
@@ -48,14 +48,21 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
     case "bsc":
       jsonRpcUrl = "https://bsc-dataseed1.binance.org";
       break;
+    case "optimism-goerli":
+      jsonRpcUrl = "https://opt-goerli.g.alchemy.com/v2/rCoAKlzApgyPIg0i7JTnex7z3VEi7tMp"
+      // "https://goerli.optimism.io";
+      break;
     case "polygon-mumbai":
-      jsonRpcUrl = "https://rpc-mumbai.matic.today"; // OR https://endpoints.omniatech.io/v1/matic/mumbai/public
+      jsonRpcUrl = "https://endpoints.omniatech.io/v1/matic/mumbai/public";
       break;
     case "polygon-zkevm-testnet":
       jsonRpcUrl = "https://rpc.public.zkevm-test.net";
       break;
     case "base-goerli-testnet":
       jsonRpcUrl = "https://base-goerli.public.blastapi.io"; // https://chainlist.org/chain/84531
+      break;
+    case "ethereum-sepolia":
+      jsonRpcUrl = "https://eth-sepolia.g.alchemy.com/v2/nvgta2mvpiYbdCCA9s4adO-ePeLZZ0AA";
       break;
     default:
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
@@ -113,14 +120,15 @@ const config: HardhatUserConfig = {
     bsc: getChainConfig("bsc"),
     mainnet: getChainConfig("mainnet"),
     optimism: getChainConfig("optimism-mainnet"),
+    "optimism-goerli": getChainConfig("optimism-goerli"),
     "polygon-mainnet": getChainConfig("polygon-mainnet"),
     "polygon-mumbai": getChainConfig("polygon-mumbai"),
-    sepolia: getChainConfig("sepolia"),
     goerli: {
       accounts: ["d27509812d5cba7dc77a7faba290ae814b37fdc82f0e70a566615e9acc90c1a8"],
       chainId: chainIds["base-goerli-testnet"],
       url: "https://base-goerli.public.blastapi.io",
     },
+    "ethereum-sepolia": getChainConfig("ethereum-sepolia"),
   },
   paths: {
     artifacts: "./artifacts",
@@ -129,7 +137,7 @@ const config: HardhatUserConfig = {
     tests: "./test",
   },
   solidity: {
-    version: "0.8.19",
+    version: "0.8.12",
     settings: {
       metadata: {
         // Not including the metadata hash
@@ -139,7 +147,7 @@ const config: HardhatUserConfig = {
       // Disable the optimizer when debugging
       // https://hardhat.org/hardhat-network/#solidity-optimizer-support
       optimizer: {
-        enabled: true,
+        enabled: false,
         runs: 800,
       },
     },

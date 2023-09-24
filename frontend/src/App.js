@@ -1,6 +1,5 @@
 import "./App.css";
 import Homepage from "./Homepage.jsx";
-import logo from "./logo.svg";
 import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
 import { configureChains, createConfig, sepolia, WagmiConfig } from "wagmi";
