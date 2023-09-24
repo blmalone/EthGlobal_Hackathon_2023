@@ -36,6 +36,7 @@ contract EIPNFT is IERC2981, ERC721 {
         bool mintingComplete;
         string dateCreated;
         string eipDescription;
+        uint8 tokenUriId;
     }
 
     // Minting Information for a given EIP
@@ -66,7 +67,8 @@ contract EIPNFT is IERC2981, ERC721 {
         uint8 _maxMints,
         address _authorAddress,
         string memory _dateCreated,
-        string memory _eipDescription
+        string memory _eipDescription,
+        uint8 _tokenUriId
         // bytes memory _authSignature
     ) public returns (uint256) {
         // require(
@@ -77,13 +79,13 @@ contract EIPNFT is IERC2981, ERC721 {
         MintInfo storage currentMintInfo = _mintInfo[_eipNumber];
         uint256 tokenNumber = currentMintInfo.mintCount + 1;
 
-        // if (bytes(_dateCreated).length > 0) {
-        //     currentMintInfo.dateCreated = _dateCreated;
-        // }
+        if (bytes(_dateCreated).length > 0) {
+             currentMintInfo.dateCreated = _dateCreated;
+        }
 
-        // if (bytes(_eipDescription).length > 0) {
-        //     currentMintInfo.eipDescription = _eipDescription;
-        // }
+        if (bytes(_eipDescription).length > 0) {
+             currentMintInfo.eipDescription = _eipDescription;
+         }
 
         // require(!currentMintInfo.mintingComplete, "Too many mints");
 
@@ -105,6 +107,7 @@ contract EIPNFT is IERC2981, ERC721 {
         uint256 tokenId = _encodeTokenId(_eipNumber, tokenNumber);
         _receiverAddresses[tokenId] = _authorAddress;
         currentMintInfo.mintCount += 1;
+        currentMintInfo.tokenUriId = _tokenUriId;
         safeMint(tokenId, _authorAddress);
         return tokenId;
     }
@@ -162,7 +165,8 @@ contract EIPNFT is IERC2981, ERC721 {
                 ),
                 currentOwner,
                 _mintInfo[eipNumber].dateCreated,
-                _mintInfo[eipNumber].eipDescription
+                _mintInfo[eipNumber].eipDescription,
+                _mintInfo[eipNumber].tokenUriId
             );
     }
 

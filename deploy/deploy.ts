@@ -91,7 +91,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     allowedEipMints,
     nftOwner,
     dateCreated,
-    eipDescription
+    eipDescription,
+    1
   );
   await wait(5, hre);
   const mintCount = await nftContract.getMintCount(eipNumber);
